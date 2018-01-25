@@ -92,7 +92,7 @@ void ST7735_XYplot(uint32_t num, int32_t bufX[], int32_t bufY[]){
 		int y = bufY[i];
 		if(x <= curXMax && x >= curXMin && y <= curYMax && y >= curYMin){
 			int realX = (x - curXMin) * 128 / (curXMax - curXMin);
-			int realY = 32 + (y - curYMin) * 128 / (curYMax - curYMin);
+			int realY = 32 + (curYMax - y) * 128 / (curYMax - curYMin);
 			ST7735_DrawPixel(realX, realY, ST7735_BLUE);
 		}
 	}
