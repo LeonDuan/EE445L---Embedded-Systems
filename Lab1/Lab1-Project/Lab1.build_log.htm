@@ -4,7 +4,7 @@
 <h1>µVision Build Log</h1>
 <h2>Project:</h2>
 C:\Users\leond\Google Drive\CLASSES\EE 445L - Embedded Systems\EE445L---Embedded-Systems Projects\Lab1\Lab1-Project\Lab1.uvproj
-Project File Date:  01/23/2018
+Project File Date:  01/30/2018
 
 <h2>Output:</h2>
 Rebuild target 'Lab1'
@@ -13,9 +13,11 @@ assembling startup.s...
 compiling PLL.c...
 compiling ST7735.c...
 compiling Lab1.c...
+Lab1.c(136): warning:  #111-D: statement is unreachable
+        PF2 ^= 0x04;
+Lab1.c: 1 warning, 0 errors
+assembling FloatFixASM.s...
+FloatFixASM.s(28): warning: A1581W: Added 2 bytes of padding at address 0x32
 linking...
-Program Size: Code=3996 RO-data=4324 RW-data=64 ZI-data=1024  
-".\Lab1.axf" - 0 Error(s), 0 Warning(s).
-</pre>
-</body>
-</html>
+Program Size: Code=4012 RO-data=4324 RW-data=64 ZI-data=1024  
+".\Lab1.axf" - 0 Error(s), 2 Warning(s).

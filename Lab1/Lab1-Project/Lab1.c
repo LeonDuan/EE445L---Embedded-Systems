@@ -26,6 +26,10 @@
 void DelayWait10ms(uint32_t n);
 void PortF_Init(void);
 // const will place these structures in ROM
+void Test1(void);
+void Test2(void);
+void Test3(void);
+void Test4(void);
 
 struct outTestCase1{    // used to test routines
   int32_t InNumber;     // test input number
@@ -125,6 +129,28 @@ int main(void){uint32_t i;
     ST7735_XYplot(50,(int32_t *)StarXbuf,(int32_t *)StarYbuf);
     Pause(); 
   } 
+	
+
+	// The following are for extra credit
+	// Test1
+	PF2 ^= 0x04;
+	Test1();
+	PF2 ^= 0x04;
+	DelayWait10ms(1);
+	// Test2
+	PF2 ^= 0x04;
+	Test2();
+	PF2 ^= 0x04;
+	DelayWait10ms(1);
+	// Test3
+	PF2 ^= 0x04;
+	Test3();
+	PF2 ^= 0x04;
+	DelayWait10ms(1);
+	// Test4
+	PF2 ^= 0x04;
+	Test4();
+	PF2 ^= 0x04;
 } 
 
 // PF4 is input
@@ -168,5 +194,24 @@ void DelayWait10ms(uint32_t n){uint32_t volatile time;
 	  	time--;
     }
     n--;
+  }
+}
+
+// version 1: C floating point
+// run with compiler options selected for floating-point hardware
+void Test1(void){
+	volatile float T;    // temperature in C
+	volatile uint32_t N; // 12-bit ADC value
+  for(N=0; N<4096; N++){
+    T = 10.0+ 0.009768*N; 	
+  }
+}
+
+// version 2: C fixed-point
+void Test2(void){
+	volatile uint32_t T;    // temperature in 0.01 C
+	volatile uint32_t N;    // 12-bit ADC value
+  for(N=0; N<4096; N++){
+    T = 1000+ (125*N+64)>>7; 	
   }
 }
