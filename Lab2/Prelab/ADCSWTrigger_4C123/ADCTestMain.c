@@ -29,11 +29,12 @@
 #include "ADCSWTrigger.h"
 #include "../inc/tm4c123gh6pm.h"
 #include "PLL.h"
+#include <stdint.h>
 
 #define PF2             (*((volatile uint32_t *)0x40025010))
 #define PF1             (*((volatile uint32_t *)0x40025008))
-void DisableInterrupts(void); // Disable interrupts
-void EnableInterrupts(void);  // Enable interrupts
+// void DisableInterrupts(void); // Disable interrupts
+// void EnableInterrupts(void);  // Enable interrupts
 long StartCritical (void);    // previous I bit, disable interrupts
 void EndCritical(long sr);    // restore I bit to previous value
 void WaitForInterrupt(void);  // low power mode
@@ -43,7 +44,7 @@ volatile uint32_t ADCvalue;
 // at a 100 Hz frequency.  It is similar to FreqMeasure.c.
 void Timer0A_Init100HzInt(void){
   volatile uint32_t delay;
-  DisableInterrupts();
+  // DisableInterrupts();
   // **** general initialization ****
   SYSCTL_RCGCTIMER_R |= 0x01;      // activate timer0
   delay = SYSCTL_RCGCTIMER_R;      // allow time to finish activating
@@ -61,12 +62,19 @@ void Timer0A_Init100HzInt(void){
   NVIC_PRI4_R = (NVIC_PRI4_R&0x00FFFFFF)|0x40000000; // top 3 bits
   NVIC_EN0_R = 1<<19;              // enable interrupt 19 in NVIC
 }
+
+uint32_t ADC_buff[1000];
+uint32_t time_buff[1000];
+int idx = 0;
 void Timer0A_Handler(void){
   TIMER0_ICR_R = TIMER_ICR_TATOCINT;    // acknowledge timer0A timeout
   PF2 ^= 0x04;                   // profile
   PF2 ^= 0x04;                   // profile
   ADCvalue = ADC0_InSeq3();
   PF2 ^= 0x04;                   // profile
+	ADC_buff[idx] = ADCvalue;
+	time_buff[idx] = TIMER0_TAR_R;
+	idx ++;
 }
 int main(void){
   PLL_Init(Bus80MHz);                   // 80 MHz
@@ -80,10 +88,25 @@ int main(void){
   GPIO_PORTF_PCTL_R = (GPIO_PORTF_PCTL_R&0xFFFFF00F)+0x00000000;
   GPIO_PORTF_AMSEL_R = 0;               // disable analog functionality on PF
   PF2 = 0;                      // turn off LED
-  EnableInterrupts();
+  // EnableInterrupts();
   while(1){
+		if(idx >= 1000){
+			break;
+		}
     PF1 ^= 0x02;  // toggles when running in main
   }
+	uint32_t greatestDiff = 0;
+	uint32_t smallestDiff = 0xFFFFFFFF;
+	uint32_t prevNum = time_buff[0];
+	for(int i = 1; i <1000; i++){
+		uint32_t curNum = time_buff[i];
+		int diff = curNum - prevNum;
+		if(diff < 0) diff = -diff;
+		if (diff < smallestDiff) smallestDiff = diff;
+		if (diff > greatestDiff) greatestDiff = diff;
+		prevNum = curNum;
+	}
+	int Jitter = greatestDiff - smallestDiff;
 }
 
 

@@ -61,12 +61,16 @@ void Timer0A_Init100HzInt(void){
   NVIC_PRI4_R = (NVIC_PRI4_R&0x00FFFFFF)|0x40000000; // top 3 bits
   NVIC_EN0_R = 1<<19;              // enable interrupt 19 in NVIC
 }
+
+int buff[1000];
+int idx = 0;
 void Timer0A_Handler(void){
   TIMER0_ICR_R = TIMER_ICR_TATOCINT;    // acknowledge timer0A timeout
   PF2 ^= 0x04;                   // profile
   PF2 ^= 0x04;                   // profile
   ADCvalue = ADC0_InSeq3();
   PF2 ^= 0x04;                   // profile
+	buff[idx++] = ADCvalue;
 }
 int main(void){
   PLL_Init(Bus80MHz);                   // 80 MHz
@@ -82,6 +86,9 @@ int main(void){
   PF2 = 0;                      // turn off LED
   EnableInterrupts();
   while(1){
+		if(idx >= 1000){
+			break;
+		}
     PF1 ^= 0x02;  // toggles when running in main
   }
 }
