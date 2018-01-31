@@ -129,28 +129,6 @@ int main(void){uint32_t i;
     ST7735_XYplot(50,(int32_t *)StarXbuf,(int32_t *)StarYbuf);
     Pause(); 
   } 
-	
-
-	// The following are for extra credit
-	// Test1
-	PF2 ^= 0x04;
-	Test1();
-	PF2 ^= 0x04;
-	DelayWait10ms(1);
-	// Test2
-	PF2 ^= 0x04;
-	Test2();
-	PF2 ^= 0x04;
-	DelayWait10ms(1);
-	// Test3
-	PF2 ^= 0x04;
-	Test3();
-	PF2 ^= 0x04;
-	DelayWait10ms(1);
-	// Test4
-	PF2 ^= 0x04;
-	Test4();
-	PF2 ^= 0x04;
 } 
 
 // PF4 is input
