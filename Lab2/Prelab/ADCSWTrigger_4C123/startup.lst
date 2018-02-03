@@ -989,11 +989,11 @@ ARM Macro Assembler    Page 16
   590 00000000         ;
   591 00000000         ;*******************************************************
                        ***********************
-  592 00000000         ;EXPORT  DisableInterrupts
-  593 00000000         ;EXPORT  EnableInterrupts
-  594 00000000         ;EXPORT  StartCritical
-  595 00000000         ;EXPORT  EndCritical
-  596 00000000         ;EXPORT  WaitForInterrupt
+  592 00000000                 EXPORT           DisableInterrupts
+  593 00000000                 EXPORT           EnableInterrupts
+  594 00000000                 EXPORT           StartCritical
+  595 00000000                 EXPORT           EndCritical
+  596 00000000                 EXPORT           WaitForInterrupt
   597 00000000         
   598 00000000         ;*********** DisableInterrupts ***************
   599 00000000         ; disable interrupts
@@ -2446,40 +2446,40 @@ Symbol: DisableInterrupts
    Definitions
       At line 602 in file startup.s
    Uses
-      None
-Comment: DisableInterrupts unused
+      At line 592 in file startup.s
+Comment: DisableInterrupts used once
 EnableInterrupts 00000004
 
 Symbol: EnableInterrupts
    Definitions
       At line 610 in file startup.s
    Uses
-      None
-Comment: EnableInterrupts unused
+      At line 593 in file startup.s
+Comment: EnableInterrupts used once
 EndCritical 00000010
 
 Symbol: EndCritical
    Definitions
       At line 627 in file startup.s
    Uses
-      None
-Comment: EndCritical unused
+      At line 595 in file startup.s
+Comment: EndCritical used once
 StartCritical 00000008
 
 Symbol: StartCritical
    Definitions
       At line 618 in file startup.s
    Uses
-      None
-Comment: StartCritical unused
+      At line 594 in file startup.s
+Comment: StartCritical used once
 WaitForInterrupt 00000016
 
 Symbol: WaitForInterrupt
    Definitions
       At line 635 in file startup.s
    Uses
-      None
-Comment: WaitForInterrupt unused
+      At line 596 in file startup.s
+Comment: WaitForInterrupt used once
 __user_initial_stackheap 0000001A
 
 Symbol: __user_initial_stackheap

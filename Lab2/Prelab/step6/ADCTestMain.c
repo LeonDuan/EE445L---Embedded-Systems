@@ -33,8 +33,8 @@
 
 #define PF2             (*((volatile uint32_t *)0x40025010))
 #define PF1             (*((volatile uint32_t *)0x40025008))
-// void DisableInterrupts(void); // Disable interrupts
-// void EnableInterrupts(void);  // Enable interrupts
+void DisableInterrupts(void); // Disable interrupts
+void EnableInterrupts(void);  // Enable interrupts
 long StartCritical (void);    // previous I bit, disable interrupts
 void EndCritical(long sr);    // restore I bit to previous value
 void WaitForInterrupt(void);  // low power mode
@@ -66,6 +66,8 @@ void Timer0A_Init100HzInt(void){
 uint32_t ADC_buff[1000];
 uint32_t time_buff[1000];
 int idx = 0;
+volatile uint32_t hist[4096] = {0};
+
 void Timer0A_Handler(void){
   TIMER0_ICR_R = TIMER_ICR_TATOCINT;    // acknowledge timer0A timeout
   PF2 ^= 0x04;                   // profile
@@ -88,7 +90,7 @@ int main(void){
   GPIO_PORTF_PCTL_R = (GPIO_PORTF_PCTL_R&0xFFFFF00F)+0x00000000;
   GPIO_PORTF_AMSEL_R = 0;               // disable analog functionality on PF
   PF2 = 0;                      // turn off LED
-  // EnableInterrupts();
+  EnableInterrupts();
   while(1){
 		if(idx >= 1000){
 			break;
@@ -106,12 +108,14 @@ int main(void){
 		if (diff > greatestDiff) greatestDiff = diff;
 		prevNum = curNum;
 	}
-	int Jitter = greatestDiff - smallestDiff;
+	DisableInterrupts	();
 	
-	uint32_t hist[4096] = {0};
-	for (int j = 1; j < 1000; j++) {
-		hist[time_buff[j]] += 1;
+	volatile int Jitter = greatestDiff - smallestDiff;
+	
+	for (int i = 0; i < 1000; i++) {
+		hist[ADC_buff[i]] += 1;
 	}
+	
+	return 0;
 }
-
 

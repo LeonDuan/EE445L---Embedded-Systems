@@ -589,11 +589,11 @@ PWM1Fault_Handler
 ; Useful functions.
 ;
 ;******************************************************************************
-        ;EXPORT  DisableInterrupts
-        ;EXPORT  EnableInterrupts
-        ;EXPORT  StartCritical
-        ;EXPORT  EndCritical
-        ;EXPORT  WaitForInterrupt
+        EXPORT  DisableInterrupts
+        EXPORT  EnableInterrupts
+        EXPORT  StartCritical
+        EXPORT  EndCritical
+        EXPORT  WaitForInterrupt
 
 ;*********** DisableInterrupts ***************
 ; disable interrupts
