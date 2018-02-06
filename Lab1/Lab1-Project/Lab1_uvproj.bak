@@ -435,11 +435,6 @@
               <FileType>1</FileType>
               <FilePath>.\Lab1.c</FilePath>
             </File>
-            <File>
-              <FileName>FloatFixASM.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>.\FloatFixASM.s</FilePath>
-            </File>
           </Files>
         </Group>
       </Groups>

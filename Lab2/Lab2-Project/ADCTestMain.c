@@ -32,6 +32,7 @@
 #include <stdint.h>
 #include "ST7735.h"
 #include <stdlib.h>
+#include "ST7735_ExtraFeature.h"
 
 #define PF2             (*((volatile uint32_t *)0x40025010))
 #define PF1             (*((volatile uint32_t *)0x40025008))
@@ -150,116 +151,28 @@ void Timer0A_Handler(void){
   PF2 ^= 0x04;                   // profile
 }
 
-void ST7735_Line(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color) {
-	int dy,dx,m,i;
-	uint16_t y,x,y_end,x_end;
-	if (abs(y1-y2)<abs(x1-x2)) {
-		if (x2>x1) {
-			dx = x2-x1;
-			dy = y2-y1;
-			x = x1;
-			x_end = x2;
-			y = y1;
-			y_end = y2;
-			i = 1;
-			if (dy<0) {
-				dy = -dy;
-				i = -1;
-			}
-			m = 2*dy-dx;
-			while (x<x_end) {
-				ST7735_DrawPixel(x,y,color);
-				if (m>0) {
-					x = x + i;
-					m = m -2*dx;
-				}
-				m = m + 2*dy;
-				x += 1;
-			}
-		}
-		else {
-			dx = x1-x2;
-			dy = y1-y2;
-			x = x2;
-			x_end = x1;
-			y = y2;
-			y_end = y1;
-			i = 1;
-			if (dy<0) {
-				dy = -dy;
-				i = -1;
-			}
-			m = 2*dy-dx;
-			while (x<x_end) {
-				ST7735_DrawPixel(x,y,color);
-				if (m>0) {
-					x = x + i;
-					m = m -2*dx;
-				}
-				m = m + 2*dy;
-				x += 1;
-			}
-		}
-	}
-	else {
-		if (y2>y1) {
-			dx = x2-x1;
-			dy = y2-y1;
-			x = x1;
-			x_end = x2;
-			y = y1;
-			y_end = y2;
-			i = 1;
-			if (dx<0) {
-				dx = -dx;
-				i = -1;
-			}
-			m = 2*dx-dy;
-			while (y<y_end) {
-				ST7735_DrawPixel(x,y,color);
-				if (m>0) {
-					x = x + i;
-					m = m -2*dy;
-				}
-				m = m + 2*dx;
-				y += 1;
-			}
-		}
-		else {
-			dx = x1-x2;
-			dy = y1-y2;
-			x = x2;
-			x_end = x1;
-			y = y2;
-			y_end = y1;
-			i = 1;
-			if (dx<0) {
-				dx = -dx;
-				i = -1;
-			}
-			m = 2*dx-dy;
-			while (x<x_end) {
-				ST7735_DrawPixel(x,y,color);
-				if (m>0) {
-					x = x + i;
-					m = m - 2*dy;
-				}
-				m = m + 2*dx;
-				y += 1;
-			}
-		}
-	}
+void PortF_Init(void){ 
+  SYSCTL_RCGCGPIO_R |= 0x20;        // 1) activate clock for Port F
+  while((SYSCTL_PRGPIO_R&0x20)==0){}; // allow time for clock to start
+                                    // 2) no need to unlock PF2, PF4
+  GPIO_PORTF_PCTL_R &= ~0x000F0F00; // 3) regular GPIO
+  GPIO_PORTF_AMSEL_R &= ~0x14;      // 4) disable analog function on PF2, PF4
+  GPIO_PORTF_PUR_R |= 0x10;         // 5) pullup for PF4
+  GPIO_PORTF_DIR_R |= 0x04;         // 5) set direction to output
+  GPIO_PORTF_AFSEL_R &= ~0x14;      // 6) regular port function
+  GPIO_PORTF_DEN_R |= 0x14;         // 7) enable digital port
 }
 
 int main(void){
   PLL_Init(Bus80MHz);                   // 80 MHz
+	
+	// initialize Port F
   SYSCTL_RCGCGPIO_R |= 0x20;            // activate port F
+	while((SYSCTL_PRGPIO_R&0x0020) == 0){};// ready?
+	// initialize ADC
   ADC0_InitSWTriggerSeq3_Ch9();         // allow time to finish activating
-  ADC0_SAC_R |= 0x0;
-	Timer0A_Init100HzInt();               // set up Timer0A for 100 Hz interrupts
-  Timer1_Init(Timer1A_Handler, 0xFFFFFFFF);
-	Timer2_Init(Timer2A_Handler, 7920);
-	Timer3_Init(Timer3A_Handler, 7920);
+	ADC0_SAC_R |= 0x0;
+
 	GPIO_PORTF_DIR_R |= 0x06;             // make PF2, PF1 out (built-in LED)
   GPIO_PORTF_AFSEL_R &= ~0x06;          // disable alt funct on PF2, PF1
   GPIO_PORTF_DEN_R |= 0x06;             // enable digital I/O on PF2, PF1
@@ -267,6 +180,15 @@ int main(void){
   GPIO_PORTF_PCTL_R = (GPIO_PORTF_PCTL_R&0xFFFFF00F)+0x00000000;
   GPIO_PORTF_AMSEL_R = 0;               // disable analog functionality on PF
   PF2 = 0;                      // turn off LED
+	
+	// initialize LCD
+	ST7735_InitR(INITR_REDTAB);
+	
+	// initialize timers
+	Timer0A_Init100HzInt();               // set up Timer0A for 100 Hz interrupts
+  Timer1_Init(Timer1A_Handler, 0xFFFFFFFF);
+	
+	// record ADC value
   EnableInterrupts();
   while(1){
 		PF1 = (PF1*12345678)/1234567+0x02;  // this line causes jitter
@@ -277,6 +199,7 @@ int main(void){
   }
 	DisableInterrupts	();
 
+	// calculate Jitter
 	uint32_t greatestDiff = 0;
 	uint32_t smallestDiff = 0xFFFFFFFF;
 	for(int i = 0; i <999; i++){
@@ -284,21 +207,27 @@ int main(void){
 		if (diff < smallestDiff) smallestDiff = diff;
 		if (diff > greatestDiff) greatestDiff = diff;
 	}
-	
 	volatile int Jitter = greatestDiff - smallestDiff;
 	for(int i = 0; i < 4096; i++){
 		hist[i] = 0;
 	}
 
+	// get ADC value histogram
 	for (int i = 0; i < 1000; i++) {
 		hist[ADC_buff[i]] += 1;
 	}
-	
 	for (int i = 0; i < 4096; i++) {
 		if(hist[i] != 0){
 			int a = 3;
 		}
-	}	
+	}
+	
+	// plot line
+	ST7735_FillScreen(0);  // set screen to black
+	ST7735_SetCursor(0,0);
+	ST7735_XYplotInit("Testing", -300, 300, -300, 300);
+	ST7735_Line(0, 128, 75, 90, 0);
+	
 	return 0;
 }
 

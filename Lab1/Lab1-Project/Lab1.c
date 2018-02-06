@@ -103,23 +103,23 @@ int main(void){uint32_t i;
   PortF_Init();
   ST7735_InitR(INITR_REDTAB);
   while(1){
-    ST7735_FillScreen(ST7735_BLACK); 
-    ST7735_SetCursor(0,0);
-    printf("Lab 1\rST7735_sDecOut2\r");
-    for(i=0; i<13; i++){
-      ST7735_sDecOut2(outTests1[i].InNumber);  // your solution
-      ST7735_OutString((char*)outTests1[i].OutBuffer); // expected solution
-    }
-    Pause();
-  
-    ST7735_FillScreen(0);  // set screen to black
-    ST7735_SetCursor(0,0);
-    printf("ST7735_uBinOut6\r");
-    for(i=0; i<14; i++){
-      ST7735_uBinOut6(outTests2[i].InNumber);  // your solution
-      ST7735_OutString((char*)outTests2[i].OutBuffer); // expected solution
-    }
-    Pause();
+//    ST7735_FillScreen(ST7735_BLACK); 
+//    ST7735_SetCursor(0,0);
+//    printf("Lab 1\rST7735_sDecOut2\r");
+//    for(i=0; i<13; i++){
+//      ST7735_sDecOut2(outTests1[i].InNumber);  // your solution
+//      ST7735_OutString((char*)outTests1[i].OutBuffer); // expected solution
+//    }
+//    Pause();
+//  
+//    ST7735_FillScreen(0);  // set screen to black
+//    ST7735_SetCursor(0,0);
+//    printf("ST7735_uBinOut6\r");
+//    for(i=0; i<14; i++){
+//      ST7735_uBinOut6(outTests2[i].InNumber);  // your solution
+//      ST7735_OutString((char*)outTests2[i].OutBuffer); // expected solution
+//    }
+//    Pause();
     
     ST7735_XYplotInit("Circle",-2500, 2500, -2500, 2500);
     ST7735_XYplot(180,(int32_t *)CircleXbuf,(int32_t *)CircleYbuf);
