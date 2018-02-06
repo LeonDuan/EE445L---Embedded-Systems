@@ -30,6 +30,8 @@
 #include "../inc/tm4c123gh6pm.h"
 #include "PLL.h"
 #include <stdint.h>
+#include "ST7735.h"
+#include <stdlib.h>
 
 #define PF2             (*((volatile uint32_t *)0x40025010))
 #define PF1             (*((volatile uint32_t *)0x40025008))
@@ -147,6 +149,108 @@ void Timer0A_Handler(void){
 	}
   PF2 ^= 0x04;                   // profile
 }
+
+void ST7735_Line(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color) {
+	int dy,dx,m,i;
+	uint16_t y,x,y_end,x_end;
+	if (abs(y1-y2)<abs(x1-x2)) {
+		if (x2>x1) {
+			dx = x2-x1;
+			dy = y2-y1;
+			x = x1;
+			x_end = x2;
+			y = y1;
+			y_end = y2;
+			i = 1;
+			if (dy<0) {
+				dy = -dy;
+				i = -1;
+			}
+			m = 2*dy-dx;
+			while (x<x_end) {
+				ST7735_DrawPixel(x,y,color);
+				if (m>0) {
+					x = x + i;
+					m = m -2*dx;
+				}
+				m = m + 2*dy;
+				x += 1;
+			}
+		}
+		else {
+			dx = x1-x2;
+			dy = y1-y2;
+			x = x2;
+			x_end = x1;
+			y = y2;
+			y_end = y1;
+			i = 1;
+			if (dy<0) {
+				dy = -dy;
+				i = -1;
+			}
+			m = 2*dy-dx;
+			while (x<x_end) {
+				ST7735_DrawPixel(x,y,color);
+				if (m>0) {
+					x = x + i;
+					m = m -2*dx;
+				}
+				m = m + 2*dy;
+				x += 1;
+			}
+		}
+	}
+	else {
+		if (y2>y1) {
+			dx = x2-x1;
+			dy = y2-y1;
+			x = x1;
+			x_end = x2;
+			y = y1;
+			y_end = y2;
+			i = 1;
+			if (dx<0) {
+				dx = -dx;
+				i = -1;
+			}
+			m = 2*dx-dy;
+			while (y<y_end) {
+				ST7735_DrawPixel(x,y,color);
+				if (m>0) {
+					x = x + i;
+					m = m -2*dy;
+				}
+				m = m + 2*dx;
+				y += 1;
+			}
+		}
+		else {
+			dx = x1-x2;
+			dy = y1-y2;
+			x = x2;
+			x_end = x1;
+			y = y2;
+			y_end = y1;
+			i = 1;
+			if (dx<0) {
+				dx = -dx;
+				i = -1;
+			}
+			m = 2*dx-dy;
+			while (x<x_end) {
+				ST7735_DrawPixel(x,y,color);
+				if (m>0) {
+					x = x + i;
+					m = m - 2*dy;
+				}
+				m = m + 2*dx;
+				y += 1;
+			}
+		}
+	}
+}
+
 int main(void){
   PLL_Init(Bus80MHz);                   // 80 MHz
   SYSCTL_RCGCGPIO_R |= 0x20;            // activate port F
