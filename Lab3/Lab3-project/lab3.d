@@ -1,0 +1,9 @@
+.\lab3.o: lab3.c
+.\lab3.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
+.\lab3.o: ../inc/tm4c123gh6pm.h
+.\lab3.o: PLL.h
+.\lab3.o: input.h
+.\lab3.o: lcd.h
+.\lab3.o: sound.h
+.\lab3.o: SysTick.h
+.\lab3.o: timeUtil.h
