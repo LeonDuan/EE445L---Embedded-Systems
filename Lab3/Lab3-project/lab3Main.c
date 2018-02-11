@@ -46,6 +46,8 @@
 #include "Switch.h" // input
 #include "lcd.h" // graphics
 #include "timeUtils.h" // time utilities
+#include "speaker.h" // speaker
+
 
 
 
@@ -61,29 +63,31 @@
 #define SWITCHES  (*((volatile uint32_t *)0x40025044))
 #define SW1       0x10                      // on the left side of the Launchpad board
 #define SW2       0x01                      // on the right side of the Launchpad board
-int main(void){ uint32_t status;
-  Switch_Init();           // PA5 is input
-  status = Switch_Input(); // 0x00 or 0x20
-  status = Switch_Input(); // 0x00 or 0x20
-  
-  Board_Init();             // initialize PF0 and PF4 and make them inputs
-                            // make PF3-1 out (PF3-1 built-in LEDs)
-  GPIO_PORTF_DIR_R |= (RED|BLUE|GREEN);
-                              // disable alt funct on PF3-1
-  GPIO_PORTF_AFSEL_R &= ~(RED|BLUE|GREEN);
-                              // enable digital I/O on PF3-1
-  GPIO_PORTF_DEN_R |= (RED|BLUE|GREEN);
-                              // configure PF3-1 as GPIO
-  GPIO_PORTF_PCTL_R = (GPIO_PORTF_PCTL_R&0xFFFF000F)+0x00000000;
-  GPIO_PORTF_AMSEL_R = 0;     // disable analog functionality on PF
-  while(1){
-    status = Board_Input();
-    switch(status){                    // switches are negative logic on PF0 and PF4
-      case 0x01: LEDS = BLUE; break;   // SW1 pressed
-      case 0x10: LEDS = RED; break;    // SW2 pressed
-      case 0x00: LEDS = GREEN; break;  // both switches pressed
-      case 0x11: LEDS = 0; break;      // neither switch pressed
-      default: LEDS = (RED|GREEN|BLUE);// unexpected return value
-    }
-  }
+
+void DisableInterrupts(void); // Disable interrupts
+void EnableInterrupts(void);  // Enable interrupts
+
+void PortF_Init(void){ 
+  SYSCTL_RCGCGPIO_R |= 0x20;        // 1) activate clock for Port F
+  while((SYSCTL_PRGPIO_R&0x20)==0){}; // allow time for clock to start
+                                    // 2) no need to unlock PF2, PF4
+  GPIO_PORTF_PCTL_R &= ~0x000F0F00; // 3) regular GPIO
+  GPIO_PORTF_AMSEL_R &= ~0x14;      // 4) disable analog function on PF2, PF4
+  GPIO_PORTF_PUR_R |= 0x10;         // 5) pullup for PF4
+  GPIO_PORTF_DIR_R |= 0x04;         // 5) set direction to output
+  GPIO_PORTF_AFSEL_R &= ~0x14;      // 6) regular port function
+  GPIO_PORTF_DEN_R |= 0x14;         // 7) enable digital port
+}
+
+int main(void){
+	PLL_Init(Bus80MHz);   
+	PortF_Init(); // initialize port F (LED outputs)
+	Switch_Init(); // initialize inputs
+	SysTick_Init(); // initialize SysTick
+	lcd_init();	//initialize LCD
+	enableSpeaker(1);
+	
+	EnableInterrupts();
+	
+	drawClock();
 }

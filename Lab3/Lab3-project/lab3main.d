@@ -5,3 +5,4 @@
 .\lab3main.o: Switch.h
 .\lab3main.o: lcd.h
 .\lab3main.o: timeUtils.h
+.\lab3main.o: speaker.h

@@ -35,6 +35,9 @@
 #include <stdint.h>
 #include "../inc/tm4c123gh6pm.h"
 #include "timeUtils.h"
+#include "PLL.h"
+
+
 
 #define NVIC_ST_CTRL_COUNT      0x00010000  // Count flag
 #define NVIC_ST_CTRL_CLK_SRC    0x00000004  // Clock Source
@@ -65,15 +68,10 @@ void SysTick_Wait(uint32_t delay){
 void SysTick_Wait10ms(uint32_t delay){
   uint32_t i;
   for(i=0; i<delay; i++){
-    SysTick_Wait(160000);  // wait 10ms (assumes 16 MHz clock)
+    SysTick_Wait(800000);  // wait 10ms (assumes 80 MHz clock)
   }
 }
 
-
-
-
-void DisableInterrupts(void); // Disable interrupts
-void EnableInterrupts(void);  // Enable interrupts
 long StartCritical (void);    // previous I bit, disable interrupts
 void EndCritical(long sr);    // restore I bit to previous value
 void WaitForInterrupt(void);  // low power mode

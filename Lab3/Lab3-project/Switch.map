@@ -403,45 +403,45 @@ Image Symbol Table
     i.Delay1ms                               0x000003c2   Section        0  lcd.o(i.Delay1ms)
     i.PLL_Init                               0x000003e4   Section        0  pll.o(i.PLL_Init)
     i.PortF_Init                             0x00000460   Section        0  lab3main.o(i.PortF_Init)
-    i.ST7735_Color565                        0x000004e4   Section        0  lcd.o(i.ST7735_Color565)
-    i.ST7735_DrawCharS                       0x000004fc   Section        0  lcd.o(i.ST7735_DrawCharS)
-    i.ST7735_DrawPixel                       0x000005f0   Section        0  lcd.o(i.ST7735_DrawPixel)
-    i.ST7735_DrawString                      0x00000638   Section        0  lcd.o(i.ST7735_DrawString)
-    i.ST7735_FillRect                        0x00000690   Section        0  lcd.o(i.ST7735_FillRect)
-    i.ST7735_FillScreen                      0x0000073c   Section        0  lcd.o(i.ST7735_FillScreen)
-    i.ST7735_InitR                           0x00000760   Section        0  lcd.o(i.ST7735_InitR)
-    i.ST7735_OutChar                         0x000007dc   Section        0  lcd.o(i.ST7735_OutChar)
-    i.ST7735_OutString                       0x000008b0   Section        0  lcd.o(i.ST7735_OutString)
-    i.ST7735_PlotClear                       0x000008c8   Section        0  lcd.o(i.ST7735_PlotClear)
-    i.ST7735_SetCursor                       0x00000924   Section        0  lcd.o(i.ST7735_SetCursor)
-    i.ST7735_XYplot                          0x00000944   Section        0  lcd.o(i.ST7735_XYplot)
-    i.ST7735_XYplotInit                      0x00000ad4   Section        0  lcd.o(i.ST7735_XYplotInit)
-    i.Switch_Init                            0x00000b24   Section        0  switch.o(i.Switch_Init)
-    i.SysTick_Init                           0x00000b98   Section        0  timeutils.o(i.SysTick_Init)
-    i.Timer0A_Handler                        0x00000bb0   Section        0  timeutils.o(i.Timer0A_Handler)
-    i.commandList                            0x00000bc8   Section        0  lcd.o(i.commandList)
-    commandList                              0x00000bc9   Thumb Code    86  lcd.o(i.commandList)
-    i.commonInit                             0x00000c20   Section        0  lcd.o(i.commonInit)
-    commonInit                               0x00000c21   Thumb Code   340  lcd.o(i.commonInit)
-    i.drawClock                              0x00000da4   Section        0  lcd.o(i.drawClock)
-    i.enableSpeaker                          0x00000dd8   Section        0  speaker.o(i.enableSpeaker)
-    i.lcd_init                               0x00000dfc   Section        0  lcd.o(i.lcd_init)
-    i.main                                   0x00000e0e   Section        0  lab3main.o(i.main)
-    i.pushColor                              0x00000e38   Section        0  lcd.o(i.pushColor)
-    pushColor                                0x00000e39   Thumb Code    18  lcd.o(i.pushColor)
-    i.setAddrWindow                          0x00000e4c   Section        0  lcd.o(i.setAddrWindow)
-    setAddrWindow                            0x00000e4d   Thumb Code   106  lcd.o(i.setAddrWindow)
-    i.writecommand                           0x00000ec0   Section        0  lcd.o(i.writecommand)
-    writecommand                             0x00000ec1   Thumb Code    40  lcd.o(i.writecommand)
-    i.writedata                              0x00000ef0   Section        0  lcd.o(i.writedata)
-    writedata                                0x00000ef1   Thumb Code    24  lcd.o(i.writedata)
-    .constdata                               0x00000f10   Section     3556  lcd.o(.constdata)
-    Font                                     0x00000f10   Data        1275  lcd.o(.constdata)
-    Bcmd                                     0x0000140b   Data         103  lcd.o(.constdata)
-    Rcmd1                                    0x00001472   Data          59  lcd.o(.constdata)
-    Rcmd2green                               0x000014ad   Data          13  lcd.o(.constdata)
-    Rcmd2red                                 0x000014ba   Data          13  lcd.o(.constdata)
-    Rcmd3                                    0x000014c7   Data          43  lcd.o(.constdata)
+    i.ST7735_Color565                        0x000004b8   Section        0  lcd.o(i.ST7735_Color565)
+    i.ST7735_DrawCharS                       0x000004d0   Section        0  lcd.o(i.ST7735_DrawCharS)
+    i.ST7735_DrawPixel                       0x000005c4   Section        0  lcd.o(i.ST7735_DrawPixel)
+    i.ST7735_DrawString                      0x0000060c   Section        0  lcd.o(i.ST7735_DrawString)
+    i.ST7735_FillRect                        0x00000664   Section        0  lcd.o(i.ST7735_FillRect)
+    i.ST7735_FillScreen                      0x00000710   Section        0  lcd.o(i.ST7735_FillScreen)
+    i.ST7735_InitR                           0x00000734   Section        0  lcd.o(i.ST7735_InitR)
+    i.ST7735_OutChar                         0x000007b0   Section        0  lcd.o(i.ST7735_OutChar)
+    i.ST7735_OutString                       0x00000884   Section        0  lcd.o(i.ST7735_OutString)
+    i.ST7735_PlotClear                       0x0000089c   Section        0  lcd.o(i.ST7735_PlotClear)
+    i.ST7735_SetCursor                       0x000008f8   Section        0  lcd.o(i.ST7735_SetCursor)
+    i.ST7735_XYplot                          0x00000918   Section        0  lcd.o(i.ST7735_XYplot)
+    i.ST7735_XYplotInit                      0x00000aa8   Section        0  lcd.o(i.ST7735_XYplotInit)
+    i.Switch_Init                            0x00000af8   Section        0  switch.o(i.Switch_Init)
+    i.SysTick_Init                           0x00000b6c   Section        0  timeutils.o(i.SysTick_Init)
+    i.Timer0A_Handler                        0x00000b84   Section        0  timeutils.o(i.Timer0A_Handler)
+    i.commandList                            0x00000b9c   Section        0  lcd.o(i.commandList)
+    commandList                              0x00000b9d   Thumb Code    86  lcd.o(i.commandList)
+    i.commonInit                             0x00000bf4   Section        0  lcd.o(i.commonInit)
+    commonInit                               0x00000bf5   Thumb Code   340  lcd.o(i.commonInit)
+    i.drawClock                              0x00000d78   Section        0  lcd.o(i.drawClock)
+    i.enableSpeaker                          0x00000dac   Section        0  speaker.o(i.enableSpeaker)
+    i.lcd_init                               0x00000dd0   Section        0  lcd.o(i.lcd_init)
+    i.main                                   0x00000de2   Section        0  lab3main.o(i.main)
+    i.pushColor                              0x00000e0c   Section        0  lcd.o(i.pushColor)
+    pushColor                                0x00000e0d   Thumb Code    18  lcd.o(i.pushColor)
+    i.setAddrWindow                          0x00000e20   Section        0  lcd.o(i.setAddrWindow)
+    setAddrWindow                            0x00000e21   Thumb Code   106  lcd.o(i.setAddrWindow)
+    i.writecommand                           0x00000e94   Section        0  lcd.o(i.writecommand)
+    writecommand                             0x00000e95   Thumb Code    40  lcd.o(i.writecommand)
+    i.writedata                              0x00000ec4   Section        0  lcd.o(i.writedata)
+    writedata                                0x00000ec5   Thumb Code    24  lcd.o(i.writedata)
+    .constdata                               0x00000ee4   Section     3556  lcd.o(.constdata)
+    Font                                     0x00000ee4   Data        1275  lcd.o(.constdata)
+    Bcmd                                     0x000013df   Data         103  lcd.o(.constdata)
+    Rcmd1                                    0x00001446   Data          59  lcd.o(.constdata)
+    Rcmd2green                               0x00001481   Data          13  lcd.o(.constdata)
+    Rcmd2red                                 0x0000148e   Data          13  lcd.o(.constdata)
+    Rcmd3                                    0x0000149b   Data          43  lcd.o(.constdata)
     .data                                    0x20000000   Section       60  lcd.o(.data)
     _width                                   0x2000000a   Data           2  lcd.o(.data)
     _height                                  0x2000000c   Data           2  lcd.o(.data)
@@ -679,34 +679,34 @@ Image Symbol Table
     Delay1ms                                 0x000003c3   Thumb Code    32  lcd.o(i.Delay1ms)
     __semihosting_library_function           0x000003c3   Thumb Code     0  indicate_semi.o(.text)
     PLL_Init                                 0x000003e5   Thumb Code   118  pll.o(i.PLL_Init)
-    PortF_Init                               0x00000461   Thumb Code   110  lab3main.o(i.PortF_Init)
-    ST7735_Color565                          0x000004e5   Thumb Code    24  lcd.o(i.ST7735_Color565)
-    ST7735_DrawCharS                         0x000004fd   Thumb Code   232  lcd.o(i.ST7735_DrawCharS)
-    ST7735_DrawPixel                         0x000005f1   Thumb Code    64  lcd.o(i.ST7735_DrawPixel)
-    ST7735_DrawString                        0x00000639   Thumb Code    86  lcd.o(i.ST7735_DrawString)
-    ST7735_FillRect                          0x00000691   Thumb Code   164  lcd.o(i.ST7735_FillRect)
-    ST7735_FillScreen                        0x0000073d   Thumb Code    28  lcd.o(i.ST7735_FillScreen)
-    ST7735_InitR                             0x00000761   Thumb Code    90  lcd.o(i.ST7735_InitR)
-    ST7735_OutChar                           0x000007dd   Thumb Code   176  lcd.o(i.ST7735_OutChar)
-    ST7735_OutString                         0x000008b1   Thumb Code    24  lcd.o(i.ST7735_OutString)
-    ST7735_PlotClear                         0x000008c9   Thumb Code    74  lcd.o(i.ST7735_PlotClear)
-    ST7735_SetCursor                         0x00000925   Thumb Code    22  lcd.o(i.ST7735_SetCursor)
-    ST7735_XYplot                            0x00000945   Thumb Code   376  lcd.o(i.ST7735_XYplot)
-    ST7735_XYplotInit                        0x00000ad5   Thumb Code    62  lcd.o(i.ST7735_XYplotInit)
-    Switch_Init                              0x00000b25   Thumb Code   100  switch.o(i.Switch_Init)
-    SysTick_Init                             0x00000b99   Thumb Code    24  timeutils.o(i.SysTick_Init)
-    Timer0A_Handler                          0x00000bb1   Thumb Code    16  timeutils.o(i.Timer0A_Handler)
-    drawClock                                0x00000da5   Thumb Code    32  lcd.o(i.drawClock)
-    enableSpeaker                            0x00000dd9   Thumb Code    30  speaker.o(i.enableSpeaker)
-    lcd_init                                 0x00000dfd   Thumb Code    18  lcd.o(i.lcd_init)
-    main                                     0x00000e0f   Thumb Code    42  lab3main.o(i.main)
-    dBfs                                     0x000014f2   Data         512  lcd.o(.constdata)
-    CircleXbuf                               0x000016f4   Data         720  lcd.o(.constdata)
-    CircleYbuf                               0x000019c4   Data         720  lcd.o(.constdata)
-    clockNumsX                               0x00001c94   Data          48  lcd.o(.constdata)
-    clockNumsY                               0x00001cc4   Data          48  lcd.o(.constdata)
-    Region$$Table$$Base                      0x00001cf4   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x00001d14   Number         0  anon$$obj.o(Region$$Table)
+    PortF_Init                               0x00000461   Thumb Code    76  lab3main.o(i.PortF_Init)
+    ST7735_Color565                          0x000004b9   Thumb Code    24  lcd.o(i.ST7735_Color565)
+    ST7735_DrawCharS                         0x000004d1   Thumb Code   232  lcd.o(i.ST7735_DrawCharS)
+    ST7735_DrawPixel                         0x000005c5   Thumb Code    64  lcd.o(i.ST7735_DrawPixel)
+    ST7735_DrawString                        0x0000060d   Thumb Code    86  lcd.o(i.ST7735_DrawString)
+    ST7735_FillRect                          0x00000665   Thumb Code   164  lcd.o(i.ST7735_FillRect)
+    ST7735_FillScreen                        0x00000711   Thumb Code    28  lcd.o(i.ST7735_FillScreen)
+    ST7735_InitR                             0x00000735   Thumb Code    90  lcd.o(i.ST7735_InitR)
+    ST7735_OutChar                           0x000007b1   Thumb Code   176  lcd.o(i.ST7735_OutChar)
+    ST7735_OutString                         0x00000885   Thumb Code    24  lcd.o(i.ST7735_OutString)
+    ST7735_PlotClear                         0x0000089d   Thumb Code    74  lcd.o(i.ST7735_PlotClear)
+    ST7735_SetCursor                         0x000008f9   Thumb Code    22  lcd.o(i.ST7735_SetCursor)
+    ST7735_XYplot                            0x00000919   Thumb Code   376  lcd.o(i.ST7735_XYplot)
+    ST7735_XYplotInit                        0x00000aa9   Thumb Code    62  lcd.o(i.ST7735_XYplotInit)
+    Switch_Init                              0x00000af9   Thumb Code   100  switch.o(i.Switch_Init)
+    SysTick_Init                             0x00000b6d   Thumb Code    24  timeutils.o(i.SysTick_Init)
+    Timer0A_Handler                          0x00000b85   Thumb Code    16  timeutils.o(i.Timer0A_Handler)
+    drawClock                                0x00000d79   Thumb Code    32  lcd.o(i.drawClock)
+    enableSpeaker                            0x00000dad   Thumb Code    30  speaker.o(i.enableSpeaker)
+    lcd_init                                 0x00000dd1   Thumb Code    18  lcd.o(i.lcd_init)
+    main                                     0x00000de3   Thumb Code    42  lab3main.o(i.main)
+    dBfs                                     0x000014c6   Data         512  lcd.o(.constdata)
+    CircleXbuf                               0x000016c8   Data         720  lcd.o(.constdata)
+    CircleYbuf                               0x00001998   Data         720  lcd.o(.constdata)
+    clockNumsX                               0x00001c68   Data          48  lcd.o(.constdata)
+    clockNumsY                               0x00001c98   Data          48  lcd.o(.constdata)
+    Region$$Table$$Base                      0x00001cc8   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x00001ce8   Number         0  anon$$obj.o(Region$$Table)
     StX                                      0x20000000   Data           4  lcd.o(.data)
     StY                                      0x20000004   Data           4  lcd.o(.data)
     StTextColor                              0x20000008   Data           2  lcd.o(.data)
@@ -732,9 +732,9 @@ Memory Map of the image
 
   Image Entry point : 0x0000026d
 
-  Load Region LR_1 (Base: 0x00000000, Size: 0x00001d54, Max: 0xffffffff, ABSOLUTE)
+  Load Region LR_1 (Base: 0x00000000, Size: 0x00001d28, Max: 0xffffffff, ABSOLUTE)
 
-    Execution Region ER_RO (Base: 0x00000000, Size: 0x00001d14, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_RO (Base: 0x00000000, Size: 0x00001ce8, Max: 0xffffffff, ABSOLUTE)
 
     Base Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -795,38 +795,38 @@ Memory Map of the image
     0x000003c2   0x00000020   Code   RO          106    i.Delay1ms          lcd.o
     0x000003e2   0x00000002   PAD
     0x000003e4   0x0000007c   Code   RO          431    i.PLL_Init          pll.o
-    0x00000460   0x00000084   Code   RO           79    i.PortF_Init        lab3main.o
-    0x000004e4   0x00000018   Code   RO          112    i.ST7735_Color565   lcd.o
-    0x000004fc   0x000000f4   Code   RO          115    i.ST7735_DrawCharS  lcd.o
-    0x000005f0   0x00000048   Code   RO          118    i.ST7735_DrawPixel  lcd.o
-    0x00000638   0x00000056   Code   RO          119    i.ST7735_DrawString  lcd.o
-    0x0000068e   0x00000002   PAD
-    0x00000690   0x000000ac   Code   RO          120    i.ST7735_FillRect   lcd.o
-    0x0000073c   0x00000024   Code   RO          121    i.ST7735_FillScreen  lcd.o
-    0x00000760   0x0000007c   Code   RO          123    i.ST7735_InitR      lcd.o
-    0x000007dc   0x000000d4   Code   RO          125    i.ST7735_OutChar    lcd.o
-    0x000008b0   0x00000018   Code   RO          126    i.ST7735_OutString  lcd.o
-    0x000008c8   0x0000005c   Code   RO          129    i.ST7735_PlotClear  lcd.o
-    0x00000924   0x00000020   Code   RO          136    i.ST7735_SetCursor  lcd.o
-    0x00000944   0x00000190   Code   RO          140    i.ST7735_XYplot     lcd.o
-    0x00000ad4   0x00000050   Code   RO          141    i.ST7735_XYplotInit  lcd.o
-    0x00000b24   0x00000074   Code   RO           15    i.Switch_Init       switch.o
-    0x00000b98   0x00000018   Code   RO          455    i.SysTick_Init      timeutils.o
-    0x00000bb0   0x00000018   Code   RO          458    i.Timer0A_Handler   timeutils.o
-    0x00000bc8   0x00000056   Code   RO          142    i.commandList       lcd.o
-    0x00000c1e   0x00000002   PAD
-    0x00000c20   0x00000184   Code   RO          143    i.commonInit        lcd.o
-    0x00000da4   0x00000034   Code   RO          144    i.drawClock         lcd.o
-    0x00000dd8   0x00000024   Code   RO          443    i.enableSpeaker     speaker.o
-    0x00000dfc   0x00000012   Code   RO          151    i.lcd_init          lcd.o
-    0x00000e0e   0x0000002a   Code   RO           80    i.main              lab3main.o
-    0x00000e38   0x00000012   Code   RO          153    i.pushColor         lcd.o
-    0x00000e4a   0x00000002   PAD
-    0x00000e4c   0x00000074   Code   RO          154    i.setAddrWindow     lcd.o
-    0x00000ec0   0x00000030   Code   RO          155    i.writecommand      lcd.o
-    0x00000ef0   0x00000020   Code   RO          156    i.writedata         lcd.o
-    0x00000f10   0x00000de4   Data   RO          158    .constdata          lcd.o
-    0x00001cf4   0x00000020   Data   RO          650    Region$$Table       anon$$obj.o
+    0x00000460   0x00000058   Code   RO           79    i.PortF_Init        lab3main.o
+    0x000004b8   0x00000018   Code   RO          112    i.ST7735_Color565   lcd.o
+    0x000004d0   0x000000f4   Code   RO          115    i.ST7735_DrawCharS  lcd.o
+    0x000005c4   0x00000048   Code   RO          118    i.ST7735_DrawPixel  lcd.o
+    0x0000060c   0x00000056   Code   RO          119    i.ST7735_DrawString  lcd.o
+    0x00000662   0x00000002   PAD
+    0x00000664   0x000000ac   Code   RO          120    i.ST7735_FillRect   lcd.o
+    0x00000710   0x00000024   Code   RO          121    i.ST7735_FillScreen  lcd.o
+    0x00000734   0x0000007c   Code   RO          123    i.ST7735_InitR      lcd.o
+    0x000007b0   0x000000d4   Code   RO          125    i.ST7735_OutChar    lcd.o
+    0x00000884   0x00000018   Code   RO          126    i.ST7735_OutString  lcd.o
+    0x0000089c   0x0000005c   Code   RO          129    i.ST7735_PlotClear  lcd.o
+    0x000008f8   0x00000020   Code   RO          136    i.ST7735_SetCursor  lcd.o
+    0x00000918   0x00000190   Code   RO          140    i.ST7735_XYplot     lcd.o
+    0x00000aa8   0x00000050   Code   RO          141    i.ST7735_XYplotInit  lcd.o
+    0x00000af8   0x00000074   Code   RO           15    i.Switch_Init       switch.o
+    0x00000b6c   0x00000018   Code   RO          455    i.SysTick_Init      timeutils.o
+    0x00000b84   0x00000018   Code   RO          458    i.Timer0A_Handler   timeutils.o
+    0x00000b9c   0x00000056   Code   RO          142    i.commandList       lcd.o
+    0x00000bf2   0x00000002   PAD
+    0x00000bf4   0x00000184   Code   RO          143    i.commonInit        lcd.o
+    0x00000d78   0x00000034   Code   RO          144    i.drawClock         lcd.o
+    0x00000dac   0x00000024   Code   RO          443    i.enableSpeaker     speaker.o
+    0x00000dd0   0x00000012   Code   RO          151    i.lcd_init          lcd.o
+    0x00000de2   0x0000002a   Code   RO           80    i.main              lab3main.o
+    0x00000e0c   0x00000012   Code   RO          153    i.pushColor         lcd.o
+    0x00000e1e   0x00000002   PAD
+    0x00000e20   0x00000074   Code   RO          154    i.setAddrWindow     lcd.o
+    0x00000e94   0x00000030   Code   RO          155    i.writecommand      lcd.o
+    0x00000ec4   0x00000020   Code   RO          156    i.writedata         lcd.o
+    0x00000ee4   0x00000de4   Data   RO          158    .constdata          lcd.o
+    0x00001cc8   0x00000020   Data   RO          650    Region$$Table       anon$$obj.o
 
 
     Execution Region ER_RW (Base: 0x20000000, Size: 0x00000040, Max: 0xffffffff, ABSOLUTE)
@@ -853,7 +853,7 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-       174         22          0          0          0        868   lab3main.o
+       130         12          0          0          0        856   lab3main.o
       2388        270       3556         60          0      16498   lcd.o
        124          6          0          0          0        447   pll.o
         36          6          0          0          0        436   speaker.o
@@ -862,7 +862,7 @@ Image component sizes
         48          8          0          4          0       1540   timeutils.o
 
     ----------------------------------------------------------------------
-      3586        960       3588         64       1024      25411   Object Totals
+      3542        950       3588         64       1024      25399   Object Totals
          0          0         32          0          0          0   (incl. Generated)
          8          0          0          0          0          0   (incl. Padding)
 
@@ -911,15 +911,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-      3856        976       3588         64       1120      24323   Grand Totals
-      3856        976       3588         64       1120      24323   ELF Image Totals
-      3856        976       3588         64          0          0   ROM Totals
+      3812        966       3588         64       1120      24311   Grand Totals
+      3812        966       3588         64       1120      24311   ELF Image Totals
+      3812        966       3588         64          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                 7444 (   7.27kB)
+    Total RO  Size (Code + RO Data)                 7400 (   7.23kB)
     Total RW  Size (RW Data + ZI Data)              1184 (   1.16kB)
-    Total ROM Size (Code + RO Data + RW Data)       7508 (   7.33kB)
+    Total ROM Size (Code + RO Data + RW Data)       7464 (   7.29kB)
 
 ==============================================================================
 
