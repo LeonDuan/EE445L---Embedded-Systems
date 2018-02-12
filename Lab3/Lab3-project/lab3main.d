@@ -3,6 +3,6 @@
 .\lab3main.o: ../inc/tm4c123gh6pm.h
 .\lab3main.o: PLL.h
 .\lab3main.o: Switch.h
-.\lab3main.o: lcd.h
+.\lab3main.o: Display.h
 .\lab3main.o: timeUtils.h
 .\lab3main.o: speaker.h

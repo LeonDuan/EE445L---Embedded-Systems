@@ -6,6 +6,8 @@
 #ifndef Display
 #define Display
 
+#define CLOCK_ORIGIN 63,95
+
 struct clock_hand {
 	uint32_t x;
 	uint32_t y;

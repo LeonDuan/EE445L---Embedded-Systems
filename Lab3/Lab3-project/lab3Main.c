@@ -44,6 +44,7 @@
 #include "PLL.h"
 #include "Switch.h" // input
 #include "Display.h" // graphics
+#include "ST7735.h"
 #include "timeUtils.h" // time utilities
 #include "speaker.h" // speaker
 
@@ -62,6 +63,23 @@
 #define SWITCHES  (*((volatile uint32_t *)0x40025044))
 #define SW1       0x10                      // on the left side of the Launchpad board
 #define SW2       0x01                      // on the right side of the Launchpad board
+
+//GLOBAL VARIABLES//
+uint32_t currentMode = 1;
+uint32_t setTimeFlag = 0;
+uint32_t currentHour = 0;
+uint32_t currentMinute = 0;
+uint32_t currentSeconds = 0;
+uint32_t prevHour;
+uint32_t prevMinute;
+uint32_t prevSeconds;
+uint32_t setAlarmFlag = 0;
+uint32_t alarmHour = 0;
+uint32_t alarmMinute = 0;
+uint32_t alarmActive = 0;
+uint32_t soundFlag = 0;
+uint32_t updateMinuteFlag = 0;
+uint32_t updateHourFlag = 0;
 
 void DisableInterrupts(void); // Disable interrupts
 void EnableInterrupts(void);  // Enable interrupts
@@ -94,4 +112,25 @@ int main(void){
 	}
 	init_LCD();
 	draw_DigitalClock(12,35);
+	while(1) {
+		switch(currentMode) {
+			case 1:
+				draw_AnalogClock();
+				if (updateMinuteFlag) {
+					draw_ClockHand(CLOCK_ORIGIN, Minute_Hand[prevMinute].x,Minute_Hand[prevMinute].y,ST7735_Color565(228,228,228));
+					draw_ClockHand(CLOCK_ORIGIN, Minute_Hand[currentMinute].x,Minute_Hand[currentMinute].y,0);
+					updateMinuteFlag = 0;
+				}
+				if (updateHourFlag) {
+					draw_ClockHand(CLOCK_ORIGIN, Hour_Hand[prevHour].x,Minute_Hand[prevHour].y,0);
+					draw_ClockHand(CLOCK_ORIGIN, Hour_Hand[currentHour].x,Minute_Hand[currentHour].y,0);
+					updateMinuteFlag = 0;
+				}
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+		}
+	}
 }
