@@ -50,7 +50,7 @@ extern uint32_t prevHour;
 extern uint32_t prevMinute;
 extern uint32_t currentMinute;
 extern uint32_t currentHour;
-extern uint32_t currentSecond;
+extern uint32_t currentSeconds;
 extern uint32_t updateMinuteFlag;
 extern uint32_t updateHourFlag;
 

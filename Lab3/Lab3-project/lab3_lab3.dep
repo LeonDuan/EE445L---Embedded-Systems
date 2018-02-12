@@ -5,12 +5,13 @@ I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C86E14)
 I (../inc/tm4c123gh6pm.h)(0x5A80D106)
 I (SysTick.h)(0x5A80D105)
 I (Switch.h)(0x5A80D105)
-F (.\lab3Main.c)(0x5A81FDC7)(-c --cpu Cortex-M4 -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\Luminary-Drvmdk -DPART_LM4F120H5QR-o .\lab3main.o --omf_browse .\lab3main.crf --depend .\lab3main.d)
+F (.\lab3Main.c)(0x5A822547)(-c --cpu Cortex-M4 -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\Luminary-Drvmdk -DPART_LM4F120H5QR-o .\lab3main.o --omf_browse .\lab3main.crf --depend .\lab3main.d)
 I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C86E14)
 I (../inc/tm4c123gh6pm.h)(0x5A80D106)
 I (PLL.h)(0x5A80D105)
 I (Switch.h)(0x5A80D105)
-I (Display.h)(0x5A817A82)
+I (Display.h)(0x5A821A65)
+I (ST7735.h)(0x5A80D105)
 I (timeUtils.h)(0x5A80D105)
 I (speaker.h)(0x5A80D105)
 F (.\PLL.c)(0x5A80D105)(-c --cpu Cortex-M4 -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\Luminary-Drvmdk -DPART_LM4F120H5QR-o .\pll.o --omf_browse .\pll.crf --depend .\pll.d)
@@ -21,7 +22,7 @@ F (.\speaker.c)(0x5A80D105)(-c --cpu Cortex-M4 -g -O0 --apcs=interwork --split_s
 I (./speaker.h)(0x5A80D105)
 I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C86E14)
 I (../inc/tm4c123gh6pm.h)(0x5A80D106)
-F (.\timeUtils.c)(0x5A80D105)(-c --cpu Cortex-M4 -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\Luminary-Drvmdk -DPART_LM4F120H5QR-o .\timeutils.o --omf_browse .\timeutils.crf --depend .\timeutils.d)
+F (.\timeUtils.c)(0x5A8227E3)(-c --cpu Cortex-M4 -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\Luminary-Drvmdk -DPART_LM4F120H5QR-o .\timeutils.o --omf_browse .\timeutils.crf --depend .\timeutils.d)
 I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C86E14)
 I (../inc/tm4c123gh6pm.h)(0x5A80D106)
 I (timeUtils.h)(0x5A80D105)
