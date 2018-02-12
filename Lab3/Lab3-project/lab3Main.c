@@ -42,9 +42,8 @@
 #include <stdint.h>
 #include "../inc/tm4c123gh6pm.h"
 #include "PLL.h"
-
 #include "Switch.h" // input
-#include "lcd.h" // graphics
+#include "Display.h" // graphics
 #include "timeUtils.h" // time utilities
 #include "speaker.h" // speaker
 
@@ -84,10 +83,15 @@ int main(void){
 	PortF_Init(); // initialize port F (LED outputs)
 	Switch_Init(); // initialize inputs
 	SysTick_Init(); // initialize SysTick
-	lcd_init();	//initialize LCD
+	init_LCD();	//initialize LCD
 	enableSpeaker(1);
 	
 	EnableInterrupts();
 	
-	drawClock();
+	draw_AnalogClock();
+	for (int i=0; i<60; i++) {
+		draw_ClockHand(63, 95, Minute_Hand[i].x,Minute_Hand[i].y,0);
+	}
+	init_LCD();
+	draw_DigitalClock(12,35);
 }
