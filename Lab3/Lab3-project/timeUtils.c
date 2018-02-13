@@ -84,7 +84,25 @@ void SysTick_Init(void){
 
 void Systick_Handler(){
 	prevSeconds = currentSeconds;
+	currentSeconds += 1;
 	
+	if (currentSeconds>=60) {
+		currentSeconds = 0;
+		prevMinute = currentMinute;
+		currentMinute += 1;
+		updateMinuteFlag = 1;
+	}
+	
+	if (currentMinute>=60) {
+		currentMinute = 0;
+		prevHour = currentHour;
+		currentHour += 1;
+		updateHourFlag = 1;
+	}
+	
+	if (currentHour>=24) {
+		currentHour = 0;
+	}
 }
 	
 long StartCritical (void);    // previous I bit, disable interrupts
@@ -96,9 +114,10 @@ void (*PeriodicTask)(void);   // user function
 // ***************** Timer0A_Init ****************
 // Activate TIMER0 interrupts to run user task periodically
 // Inputs:  task is a pointer to a user function
-//          period in units (1/clockfreq), 32 bits
+//         period in units (1/clockfreq), 32 bits
 // Outputs: none
-void Timer0A_Init(void(*task)(void), uint32_t period){long sr;
+void Timer0A_Init(void(*task)(void), uint32_t period){
+	long sr;
   sr = StartCritical(); 
   SYSCTL_RCGCTIMER_R |= 0x01;   // 0) activate TIMER0
   PeriodicTask = task;          // user function
@@ -121,4 +140,3 @@ void Timer0A_Handler(void){
   TIMER0_ICR_R = TIMER_ICR_TATOCINT;// acknowledge timer0A timeout
   (*PeriodicTask)();                // execute user task
 }
-
