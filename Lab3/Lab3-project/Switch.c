@@ -85,6 +85,7 @@ void Switch_Init(void){
   NVIC_PRI1_R = (NVIC_PRI1_R&0XFFFFFF00)|0x00000040; // 14) priority 2
   NVIC_EN0_R = 0x0000010;           // 15) Enable interurpt 30 in NVIC
 }
+
 ////------------Switch_Input------------
 //// Read and return the status of GPIO Port A bit 5 
 //// Input: none
@@ -197,17 +198,22 @@ void Switch_Init(void){
 //}
   
 void GPIOPortE_Handler() {
-	if (!PE0) {
-		GPIO_PORTE_ICR_R = 0x01;
-		currentMode = (currentMode+1)%3 +1;
+	int interrupt_trigger = GPIO_PORTE_MIS_R;
+	int delay = 1000;
+	while (delay) {
+		delay--;
 	}
-	else if (!PE1) {
-		GPIO_PORTE_ICR_R = 0x02;
-		if (currentMode) {
+	if (interrupt_trigger&0x01) {
+		if (!PE0) {
+			currentMode = (currentMode+1)%3;
+		}
+	}
+	else if (interrupt_trigger&0x02) {
+		if (!PE1) {
 			setTimeFlag = 1;
 		}
 	}
-	else if (!PE2) {
-		GPIO_PORTE_ICR_R = 0x04;
+	else if (interrupt_trigger&0x04) {
+	
 	}
 }
