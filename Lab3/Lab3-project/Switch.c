@@ -61,8 +61,9 @@
 #define SW2       0x01                      // on the right side of the Launchpad board
 #define SYSCTL_RCGC2_GPIOF      0x00000020  // port F Clock Gating Control
 
-extern uint32_t currentMode;
+extern uint32_t changeModeFlag;
 extern uint32_t setTimeFlag;
+
 
 //------------Switch_Init------------
 // Initialize GPIO Port E0-2 for input
@@ -199,21 +200,25 @@ void Switch_Init(void){
   
 void GPIOPortE_Handler() {
 	int interrupt_trigger = GPIO_PORTE_MIS_R;
-	int delay = 1000;
+	int delay = 10000;
 	while (delay) {
 		delay--;
 	}
 	if (interrupt_trigger&0x01) {
 		if (!PE0) {
-			currentMode = (currentMode+1)%3;
+			GPIO_PORTE_ICR_R = 0x01;
+			changeModeFlag = 1;
 		}
 	}
 	else if (interrupt_trigger&0x02) {
 		if (!PE1) {
+			GPIO_PORTE_ICR_R = 0x02;
 			setTimeFlag = 1;
 		}
 	}
 	else if (interrupt_trigger&0x04) {
-	
+		
 	}
+	
+	GPIO_PORTE_ICR_R = 0x07;
 }

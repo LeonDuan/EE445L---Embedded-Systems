@@ -85,7 +85,7 @@ void draw_DigitalClock(uint16_t hour, uint16_t minute) {
 }
 
 void draw_AnalogClock(void) {
-	initClock("Alarm Clock",-2500, 2500, -2500, 2500);
+	initClock("Analog Clock",-2500, 2500, -2500, 2500);
 	drawClock(180,(int32_t *)CircleXbuf,(int32_t *)CircleYbuf);
 }
 
@@ -96,6 +96,8 @@ void init_LCD(void){
 }
 
 void clear_Screen(char * message){
+	ST7735_FillScreen(0);
 	ST7735_PlotClear(0,127);
+	ST7735_SetCursor(0,0);
 	ST7735_OutString(message);
 }

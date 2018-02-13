@@ -64,9 +64,9 @@
 #define SW1       0x10                      // on the left side of the Launchpad board
 #define SW2       0x01                      // on the right side of the Launchpad board
 
-#define ANALOG_CLOCK		1
-#define DIGITAL_CLOCK		2
-#define ALARM_CLOCK			3
+#define ANALOG_CLOCK		0
+#define DIGITAL_CLOCK		1
+#define ALARM_CLOCK			2
 
 //GLOBAL VARIABLES//
 uint32_t currentMode = 2;
@@ -83,6 +83,7 @@ uint32_t alarmHour = 0;
 uint32_t alarmMinute = 0;
 uint32_t alarmActive = 0;
 uint32_t soundFlag = 0;
+uint32_t changeModeFlag = 0;
 uint32_t updateTimeFlag = 1;
 
 void DisableInterrupts(void); // Disable interrupts
@@ -125,6 +126,10 @@ int main(void){
 	EnableInterrupts();
 	
 	while(1) {
+		if (changeModeFlag) {
+			currentMode = (currentMode+1)%3;
+			changeModeFlag = 0;
+		}
 		switch(currentMode) {
 			case ANALOG_CLOCK:
 				if (prevMode != currentMode) { 
@@ -137,15 +142,19 @@ int main(void){
 					draw_ClockHand(CLOCK_ORIGIN, Minute_Hand[currentMinute].x,Minute_Hand[currentMinute].y,0);
 					draw_ClockHand(CLOCK_ORIGIN, Hour_Hand[currentHour % 12].x,Hour_Hand[currentHour % 12].y,0);
 					updateTimeFlag = 0;
+					
 				}
 				break;
 			case DIGITAL_CLOCK:
+				
 				if (prevMode != currentMode) { 
 					clear_Screen("Digital Clock");
 					draw_DigitalClock(currentHour, currentMinute);
+					
 				}
 				else if (updateTimeFlag){
 					draw_DigitalClock(currentHour, currentMinute);
+					
 				}
 				break;
 			case ALARM_CLOCK:
