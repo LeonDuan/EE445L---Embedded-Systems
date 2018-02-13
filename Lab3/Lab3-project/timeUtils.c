@@ -170,6 +170,7 @@ void Timer1A_Handler(void){
 	if (snooze_counter==0) {
 		TIMER0_IMR_R = 0x00000000;    // disarm timeout interrupt
 		enableSpeaker(1);
+		soundFlag = 1;
 		snooze_counter = 60;	
 	}
 	else snooze_counter -- ;

@@ -70,6 +70,7 @@ extern uint32_t setAlarmFlag;
 extern uint32_t changeThemeFlag;
 extern uint32_t currentMode;
 extern uint32_t soundFlag;
+extern uint32_t alarmActive;
 
 //------------Switch_Init------------
 // Initialize GPIO Port E0-2 for input
@@ -213,7 +214,12 @@ void GPIOPortE_Handler() {
 	if (interrupt_trigger&0x01) {
 		if (!PE0) {
 			GPIO_PORTE_ICR_R = 0x01;
-			changeModeFlag = 1;
+			if (soundFlag) {
+				enableSpeaker(0);
+				alarmActive = 0;
+				soundFlag = 0;
+			}
+			else changeModeFlag = 1;
 		}
 	}
 	else if (interrupt_trigger&0x02) {
@@ -229,6 +235,7 @@ void GPIOPortE_Handler() {
 			if (soundFlag == 1) {
 				enableSpeaker(0);
 				Timer1_Arm();
+				soundFlag = 0;
 			}				
 		}
 	}
