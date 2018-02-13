@@ -199,7 +199,7 @@ void Switch_Init(void){
 void GPIOPortE_Handler() {
 	if (!PE0) {
 		GPIO_PORTE_ICR_R = 0x01;
-		currentMode = (currentMode+1)%3;
+		currentMode = (currentMode+1)%3 +1;
 	}
 	else if (!PE1) {
 		GPIO_PORTE_ICR_R = 0x02;
