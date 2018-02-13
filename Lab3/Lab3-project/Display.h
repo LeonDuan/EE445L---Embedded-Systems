@@ -23,9 +23,11 @@ struct clock_hand Minute_Hand[60] = {
 	{27,64},{30,60},{34,56},{38,52},{43,49},{48,48},{53,47},{58,46}
 };
 
+uint16_t Themes[7] = {0x0000,0xF800,0x001F,0x07E0,0xFFE0,0xF81F,0x07FF};
+
 void draw_AnalogClock(void);
 void draw_ClockHand(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color);
-void draw_DigitalClock(uint16_t hour, uint16_t minute);
+void draw_DigitalClock(uint16_t hour, uint16_t minute, uint16_t color);
 void init_LCD(void);
 void clear_Screen(char * message);
 

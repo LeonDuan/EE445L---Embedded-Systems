@@ -70,18 +70,18 @@ void draw_ClockHand(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t
 	}
 }
 
-void draw_DigitalClock(uint16_t hour, uint16_t minute) {
+void draw_DigitalClock(uint16_t hour, uint16_t minute, uint16_t color) {
 	char hour_1 = (hour/10) + '0';
 	char hour_2 = hour%10 + '0';
 	char colon = ':';
 	char min_1 = (minute/10) + '0';
 	char min_2 = minute%10 + '0';
 
-	ST7735_DrawChar(5,80,hour_1,ST7735_BLACK,ST7735_Color565(228,228,228),4);
-	ST7735_DrawChar(32,80,hour_2,ST7735_BLACK,ST7735_Color565(228,228,228),4);
-	ST7735_DrawChar(52,80,colon,ST7735_BLACK,ST7735_Color565(228,228,228),4);
-	ST7735_DrawChar(76,80,min_1,ST7735_BLACK,ST7735_Color565(228,228,228),4);
-	ST7735_DrawChar(100,80,min_2,ST7735_BLACK,ST7735_Color565(228,228,228),4);
+	ST7735_DrawChar(5,80,hour_1,color,ST7735_Color565(228,228,228),4);
+	ST7735_DrawChar(32,80,hour_2,color,ST7735_Color565(228,228,228),4);
+	ST7735_DrawChar(52,80,colon,color,ST7735_Color565(228,228,228),4);
+	ST7735_DrawChar(76,80,min_1,color,ST7735_Color565(228,228,228),4);
+	ST7735_DrawChar(100,80,min_2,color,ST7735_Color565(228,228,228),4);
 }
 
 void draw_AnalogClock(void) {

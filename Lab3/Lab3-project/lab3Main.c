@@ -85,6 +85,9 @@ uint32_t alarmActive = 0;
 uint32_t soundFlag = 0;
 uint32_t changeModeFlag = 0;
 uint32_t updateTimeFlag = 1;
+uint32_t changeThemeFlag = 0;
+uint16_t THEME_COLOR = 0x0000;
+uint16_t theme_index = 0;
 
 void DisableInterrupts(void); // Disable interrupts
 void EnableInterrupts(void);  // Enable interrupts
@@ -126,6 +129,11 @@ int main(void){
 	EnableInterrupts();
 	
 	while(1) {
+		if (changeThemeFlag) {
+			theme_index = (theme_index+1)%7;
+			THEME_COLOR = Themes[theme_index];
+			changeThemeFlag = 0;
+		}
 		if (changeModeFlag) {
 			currentMode = (currentMode+1)%3;
 			changeModeFlag = 0;
@@ -139,8 +147,8 @@ int main(void){
 				if (updateTimeFlag) {
 					draw_ClockHand(CLOCK_ORIGIN, Minute_Hand[prevMinute].x,Minute_Hand[prevMinute].y,ST7735_Color565(228,228,228));
 					draw_ClockHand(CLOCK_ORIGIN, Hour_Hand[prevHour % 12].x,Hour_Hand[prevHour % 12].y,ST7735_Color565(228,228,228));
-					draw_ClockHand(CLOCK_ORIGIN, Minute_Hand[currentMinute].x,Minute_Hand[currentMinute].y,0);
-					draw_ClockHand(CLOCK_ORIGIN, Hour_Hand[currentHour % 12].x,Hour_Hand[currentHour % 12].y,0);
+					draw_ClockHand(CLOCK_ORIGIN, Minute_Hand[currentMinute].x,Minute_Hand[currentMinute].y,THEME_COLOR);
+					draw_ClockHand(CLOCK_ORIGIN, Hour_Hand[currentHour % 12].x,Hour_Hand[currentHour % 12].y,THEME_COLOR);
 					updateTimeFlag = 0;
 					
 				}
@@ -149,18 +157,18 @@ int main(void){
 				
 				if (prevMode != currentMode) { 
 					clear_Screen("Digital Clock");
-					draw_DigitalClock(currentHour, currentMinute);
+					draw_DigitalClock(currentHour, currentMinute, THEME_COLOR);
 					
 				}
 				else if (updateTimeFlag){
-					draw_DigitalClock(currentHour, currentMinute);
+					draw_DigitalClock(currentHour, currentMinute, THEME_COLOR);
 					
 				}
 				break;
 			case ALARM_CLOCK:
 				if (prevMode != currentMode) { 
 					clear_Screen("Set Alarm");
-					draw_DigitalClock(alarmHour, alarmMinute);
+					draw_DigitalClock(alarmHour, alarmMinute, THEME_COLOR);
 				}
 				break;
 		}

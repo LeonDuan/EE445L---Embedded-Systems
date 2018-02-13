@@ -3,3 +3,5 @@
 .\switch.o: ../inc/tm4c123gh6pm.h
 .\switch.o: SysTick.h
 .\switch.o: Switch.h
+.\switch.o: speaker.h
+.\switch.o: timeUtils.h

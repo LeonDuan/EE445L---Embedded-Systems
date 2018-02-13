@@ -3,3 +3,4 @@
 .\timeutils.o: ../inc/tm4c123gh6pm.h
 .\timeutils.o: timeUtils.h
 .\timeutils.o: PLL.h
+.\timeutils.o: speaker.h

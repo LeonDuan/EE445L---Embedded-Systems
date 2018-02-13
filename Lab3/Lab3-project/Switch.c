@@ -48,6 +48,8 @@
 #include "../inc/tm4c123gh6pm.h"
 #include "SysTick.h"
 #include "Switch.h"
+#include "speaker.h"
+#include "timeUtils.h"
 
 #define GPIO_LOCK_KEY           0x4C4F434B  // Unlocks the GPIO_CR register
 #define PF0                     (*((volatile uint32_t *)0x40025004))
@@ -56,6 +58,7 @@
 #define PE0											(*((volatile uint32_t *)0x40024004))
 #define PE1											(*((volatile uint32_t *)0x40024008))
 #define PE2											(*((volatile uint32_t *)0x40024010))
+#define PE3											(*((volatile uint32_t *)0x40024020))
 #define SWITCHES                (*((volatile uint32_t *)0x40025044))
 #define SW1       0x10                      // on the left side of the Launchpad board
 #define SW2       0x01                      // on the right side of the Launchpad board
@@ -63,7 +66,10 @@
 
 extern uint32_t changeModeFlag;
 extern uint32_t setTimeFlag;
-
+extern uint32_t setAlarmFlag;
+extern uint32_t changeThemeFlag;
+extern uint32_t currentMode;
+extern uint32_t soundFlag;
 
 //------------Switch_Init------------
 // Initialize GPIO Port E0-2 for input
@@ -72,17 +78,17 @@ extern uint32_t setTimeFlag;
 void Switch_Init(void){ 
   SYSCTL_RCGCGPIO_R |= 0x00000010;     // 1) activate clock for Port A
   while((SYSCTL_PRGPIO_R&0x10) == 0){};// ready?
-  GPIO_PORTE_DIR_R &= ~0x07;        // 3) direction PA5 input
-  GPIO_PORTE_AFSEL_R &= ~0x07;      // 4) PA5 regular port function
-  GPIO_PORTE_DEN_R |= 0x07;         // 5) enable PA5 digital port
-  GPIO_PORTE_AMSEL_R &= ~0x07;      // 6) disable analog on PA5
+  GPIO_PORTE_DIR_R &= ~0x0F;        // 3) direction PA5 input
+  GPIO_PORTE_AFSEL_R &= ~0x0F;      // 4) PA5 regular port function
+  GPIO_PORTE_DEN_R |= 0x0F;         // 5) enable PA5 digital port
+  GPIO_PORTE_AMSEL_R &= ~0x0F;      // 6) disable analog on PA5
   GPIO_PORTE_PCTL_R &= ~0x000F0F00; // 7) PCTL GPIO on PA5
-  GPIO_PORTE_PUR_R |= 0x07;         // 8) Enable weak pull up
-  GPIO_PORTE_IS_R &= ~0x07;         // 9) PE0-PE2 is edge sensitive
-  GPIO_PORTE_IBE_R &= ~0x07;        // 10) PE0-PE2 is not both edges
-  GPIO_PORTE_IEV_R &= ~0x07;        // 11) PE0-PE2 falling edge
-  GPIO_PORTE_ICR_R = 0x07;          // 12) clear flag
-  GPIO_PORTE_IM_R |= 0x07;          // 13) arm interrupts
+  GPIO_PORTE_PUR_R |= 0x0F;         // 8) Enable weak pull up
+  GPIO_PORTE_IS_R &= ~0x0F;         // 9) PE0-PE2 is edge sensitive
+  GPIO_PORTE_IBE_R &= ~0x0F;        // 10) PE0-PE2 is not both edges
+  GPIO_PORTE_IEV_R &= ~0x0F;        // 11) PE0-PE2 falling edge
+  GPIO_PORTE_ICR_R = 0x0F;          // 12) clear flag
+  GPIO_PORTE_IM_R |= 0x0F;          // 13) arm interrupts
   NVIC_PRI1_R = (NVIC_PRI1_R&0XFFFFFF00)|0x00000040; // 14) priority 2
   NVIC_EN0_R = 0x0000010;           // 15) Enable interurpt 30 in NVIC
 }
@@ -213,11 +219,24 @@ void GPIOPortE_Handler() {
 	else if (interrupt_trigger&0x02) {
 		if (!PE1) {
 			GPIO_PORTE_ICR_R = 0x02;
-			setTimeFlag = 1;
+			if (currentMode==1) setTimeFlag = 1;
+			if (currentMode==2) setAlarmFlag =1;
 		}
 	}
 	else if (interrupt_trigger&0x04) {
-		
+		if (!PE2) {
+			GPIO_PORTE_ICR_R = 0x04;
+			if (soundFlag == 1) {
+				enableSpeaker(0);
+				Timer1_Arm();
+			}				
+		}
+	}
+	else if (interrupt_trigger&0x08) {
+		if (!PE3) {
+			GPIO_PORTE_ICR_R = 0x08;
+			changeThemeFlag = 1;
+		}
 	}
 	
 	GPIO_PORTE_ICR_R = 0x07;
