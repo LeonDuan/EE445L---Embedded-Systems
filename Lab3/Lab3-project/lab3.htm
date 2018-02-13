@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\lab3.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\lab3.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Mon Feb 12 20:04:43 2018
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Mon Feb 12 20:37:19 2018
 <BR><P>
 <H3>Maximum Stack Usage =        200 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -953,7 +953,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[ad]"></a>draw_ClockHand</STRONG> (Thumb, 114 bytes, Stack size 56 bytes, display.o(i.draw_ClockHand))
+<P><STRONG><a name="[ad]"></a>draw_ClockHand</STRONG> (Thumb, 112 bytes, Stack size 56 bytes, display.o(i.draw_ClockHand))
 <BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = draw_ClockHand &rArr; ST7735_DrawPixel &rArr; setAddrWindow
 </UL>
 <BR>[Calls]<UL><LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_DrawPixel
@@ -962,7 +962,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[af]"></a>draw_DigitalClock</STRONG> (Thumb, 226 bytes, Stack size 48 bytes, display.o(i.draw_DigitalClock))
+<P><STRONG><a name="[af]"></a>draw_DigitalClock</STRONG> (Thumb, 228 bytes, Stack size 48 bytes, display.o(i.draw_DigitalClock))
 <BR><BR>[Stack]<UL><LI>Max Depth = 128<LI>Call Chain = draw_DigitalClock &rArr; ST7735_DrawChar &rArr; setAddrWindow
 </UL>
 <BR>[Calls]<UL><LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_DrawChar
@@ -991,7 +991,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[89]"></a>main</STRONG> (Thumb, 402 bytes, Stack size 8 bytes, lab3main.o(i.main))
+<P><STRONG><a name="[89]"></a>main</STRONG> (Thumb, 430 bytes, Stack size 8 bytes, lab3main.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 200 + Unknown Stack Size
 <LI>Call Chain = main &rArr; draw_AnalogClock &rArr; initClock &rArr; ST7735_OutString &rArr; ST7735_OutChar &rArr; ST7735_DrawString &rArr; ST7735_DrawCharS &rArr; ST7735_FillRect &rArr; setAddrWindow
 </UL>

@@ -66,7 +66,7 @@ void draw_ClockHand(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t
 	for(int i = 0; i < longerLength; i ++){
 		x = x0 + i * xLength / longerLength;
 		y = (y0 + i * yLength / longerLength);
-		ST7735_DrawPixel(x, y, ST7735_BLUE);
+		ST7735_DrawPixel(x, y, color);
 	}
 }
 
@@ -77,11 +77,11 @@ void draw_DigitalClock(uint16_t hour, uint16_t minute) {
 	char min_1 = (minute/10) + '0';
 	char min_2 = minute%10 + '0';
 
-	ST7735_DrawChar(5,80,hour_1,ST7735_BLACK,ST7735_Color565(228,228,228),5);
-	ST7735_DrawChar(28,80,hour_2,ST7735_BLACK,ST7735_Color565(228,228,228),5);
-	ST7735_DrawChar(51,80,colon,ST7735_BLACK,ST7735_Color565(228,228,228),5);
-	ST7735_DrawChar(74,80,min_1,ST7735_BLACK,ST7735_Color565(228,228,228),5);
-	ST7735_DrawChar(97,80,min_2,ST7735_BLACK,ST7735_Color565(228,228,228),5);
+	ST7735_DrawChar(5,80,hour_1,ST7735_BLACK,ST7735_Color565(228,228,228),4);
+	ST7735_DrawChar(32,80,hour_2,ST7735_BLACK,ST7735_Color565(228,228,228),4);
+	ST7735_DrawChar(52,80,colon,ST7735_BLACK,ST7735_Color565(228,228,228),4);
+	ST7735_DrawChar(76,80,min_1,ST7735_BLACK,ST7735_Color565(228,228,228),4);
+	ST7735_DrawChar(100,80,min_2,ST7735_BLACK,ST7735_Color565(228,228,228),4);
 }
 
 void draw_AnalogClock(void) {

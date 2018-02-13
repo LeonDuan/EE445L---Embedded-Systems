@@ -51,8 +51,7 @@ extern uint32_t prevMinute;
 extern uint32_t currentMinute;
 extern uint32_t currentHour;
 extern uint32_t currentSeconds;
-extern uint32_t updateMinuteFlag;
-extern uint32_t updateHourFlag;
+extern uint32_t updateTimeFlag;
 
 long StartCritical(void);
 void EndCritical(long);
@@ -112,7 +111,7 @@ void Timer0A_Init(void){
   TIMER0_CTL_R = 0x00000000;    // 1) disable TIMER0A during setup
   TIMER0_CFG_R = 0x00000000;    // 2) configure for 32-bit mode
   TIMER0_TAMR_R = 0x00000002;   // 3) configure for periodic mode, default down-count settings
-  TIMER0_TAILR_R = 80000000-1;    // 4) reload value
+  TIMER0_TAILR_R = 800000-1;    // 4) reload value
   TIMER0_TAPR_R = 0;            // 5) bus clock resolution
   TIMER0_ICR_R = 0x00000001;    // 6) clear TIMER0A timeout flag
   TIMER0_IMR_R = 0x00000001;    // 7) arm timeout interrupt
@@ -134,14 +133,14 @@ void Timer0A_Handler(void){
 		currentSeconds = 0;
 		prevMinute = currentMinute;
 		currentMinute += 1;
-		updateMinuteFlag = 1;
+		updateTimeFlag = 1;
 	}
 	
 	if (currentMinute>=60) {
 		currentMinute = 0;
 		prevHour = currentHour;
 		currentHour += 1;
-		updateHourFlag = 1;
+		updateTimeFlag = 1;
 	}
 	
 	if (currentHour>=24) {
