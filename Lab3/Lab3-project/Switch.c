@@ -70,7 +70,7 @@ extern uint32_t setTimeFlag;
 // Output: none
 void Switch_Init(void){ 
   SYSCTL_RCGCGPIO_R |= 0x00000010;     // 1) activate clock for Port A
-  while((SYSCTL_PRGPIO_R&0x01) == 0){};// ready?
+  while((SYSCTL_PRGPIO_R&0x10) == 0){};// ready?
   GPIO_PORTE_DIR_R &= ~0x07;        // 3) direction PA5 input
   GPIO_PORTE_AFSEL_R &= ~0x07;      // 4) PA5 regular port function
   GPIO_PORTE_DEN_R |= 0x07;         // 5) enable PA5 digital port

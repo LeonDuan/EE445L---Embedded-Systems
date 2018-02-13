@@ -94,3 +94,8 @@ void init_LCD(void){
 	ST7735_InitR(INITR_REDTAB);
   ST7735_PlotClear(0,127);
 }
+
+void clear_Screen(char * message){
+	ST7735_PlotClear(0,127);
+	ST7735_OutString(message);
+}

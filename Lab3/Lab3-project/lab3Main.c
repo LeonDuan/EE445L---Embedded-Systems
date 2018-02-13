@@ -64,10 +64,15 @@
 #define SW1       0x10                      // on the left side of the Launchpad board
 #define SW2       0x01                      // on the right side of the Launchpad board
 
+#define ANALOG_CLOCK		1
+#define DIGITAL_CLOCK		2
+#define ALARM_CLOCK			3
+
 //GLOBAL VARIABLES//
 uint32_t currentMode = 1;
+uint32_t prevMode = 0;
 uint32_t setTimeFlag = 0;
-uint32_t currentHour = 0;
+uint32_t currentHour = 2;
 uint32_t currentMinute = 0;
 uint32_t currentSeconds = 0;
 uint32_t prevHour;
@@ -78,8 +83,8 @@ uint32_t alarmHour = 0;
 uint32_t alarmMinute = 0;
 uint32_t alarmActive = 0;
 uint32_t soundFlag = 0;
-uint32_t updateMinuteFlag = 0;
-uint32_t updateHourFlag = 0;
+uint32_t updateMinuteFlag = 1;
+uint32_t updateHourFlag = 1;
 
 void DisableInterrupts(void); // Disable interrupts
 void EnableInterrupts(void);  // Enable interrupts
@@ -96,41 +101,61 @@ void PortF_Init(void){
   GPIO_PORTF_DEN_R |= 0x14;         // 7) enable digital port
 }
 
+void PortD_Init(void){
+  SYSCTL_RCGCGPIO_R |= 0x08;        // 1) activate port D
+  while((SYSCTL_PRGPIO_R&0x08)==0){};   // allow time for clock to stabilize
+                                    // 2) no need to unlock PD3-0
+  GPIO_PORTD_AMSEL_R &= ~0x0F;      // 3) disable analog functionality on PD3-0
+  GPIO_PORTD_PCTL_R &= ~0x0000FFFF; // 4) GPIO
+  GPIO_PORTD_DIR_R |= 0x01;         // 5) make PD3-0 out
+  GPIO_PORTD_AFSEL_R &= ~0x01;      // 6) regular port function
+  GPIO_PORTD_DEN_R |= 0x01;         // 7) enable digital I/O on PD3-0
+}
+
+
 int main(void){
 	PLL_Init(Bus80MHz);   
 	PortF_Init(); // initialize port F (LED outputs)
+	PortD_Init();	// initialize port D (Speaker output)
 	Switch_Init(); // initialize inputs
 	SysTick_Init(); // initialize SysTick
+	Timer0A_Init();
 	init_LCD();	//initialize LCD
-	enableSpeaker(1);
+	// enableSpeaker(1);
 	
 	EnableInterrupts();
 	
-	draw_AnalogClock();
-	for (int i=0; i<60; i++) {
-		draw_ClockHand(63, 95, Minute_Hand[i].x,Minute_Hand[i].y,0);
-	}
-	init_LCD();
-	draw_DigitalClock(12,35);
 	while(1) {
 		switch(currentMode) {
-			case 1:
-				draw_AnalogClock();
+			case ANALOG_CLOCK:
+				if (prevMode != currentMode) { 
+					clear_Screen("Analog Clock");
+					draw_AnalogClock();
+				}
 				if (updateMinuteFlag) {
 					draw_ClockHand(CLOCK_ORIGIN, Minute_Hand[prevMinute].x,Minute_Hand[prevMinute].y,ST7735_Color565(228,228,228));
 					draw_ClockHand(CLOCK_ORIGIN, Minute_Hand[currentMinute].x,Minute_Hand[currentMinute].y,0);
 					updateMinuteFlag = 0;
 				}
 				if (updateHourFlag) {
-					draw_ClockHand(CLOCK_ORIGIN, Hour_Hand[prevHour].x,Minute_Hand[prevHour].y,0);
-					draw_ClockHand(CLOCK_ORIGIN, Hour_Hand[currentHour].x,Minute_Hand[currentHour].y,0);
-					updateMinuteFlag = 0;
+					draw_ClockHand(CLOCK_ORIGIN, Hour_Hand[prevHour % 12].x,Hour_Hand[prevHour % 12].y,0);
+					draw_ClockHand(CLOCK_ORIGIN, Hour_Hand[currentHour % 12].x,Hour_Hand[currentHour % 12].y,0);
+					updateHourFlag = 0;
 				}
 				break;
-			case 2:
+				
+			case DIGITAL_CLOCK:
+				if (prevMode != currentMode) { 
+					clear_Screen("Digital Clock");
+					draw_DigitalClock(currentHour, currentMinute);
+				}
+				else if (updateMinuteFlag || updateHourFlag){
+					draw_DigitalClock(currentHour, currentMinute);
+				}
 				break;
-			case 3:
+			case ALARM_CLOCK:
 				break;
 		}
+		prevMode = currentMode;
 	}
 }

@@ -27,5 +27,6 @@ void draw_AnalogClock(void);
 void draw_ClockHand(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color);
 void draw_DigitalClock(uint16_t hour, uint16_t minute);
 void init_LCD(void);
+void clear_Screen(char * message);
 
 #endif
