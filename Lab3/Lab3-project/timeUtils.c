@@ -86,9 +86,13 @@ void SysTick_Init(void){
 //  }
 //}
 #define PF2       (*((volatile uint32_t *)0x40025010))
+	
+extern uint32_t alarmHour;
+extern uint32_t alarmMinute;
+extern uint32_t alarmActive;
 extern uint32_t soundFlag;
 void SysTick_Handler(){
-	if(soundFlag){
+	if(soundFlag && alarmActive){
 		GPIO_PORTD_DATA_R = !GPIO_PORTD_DATA_R;
 	}
 }
@@ -111,7 +115,7 @@ void Timer0A_Init(void){
   TIMER0_CTL_R = 0x00000000;    // 1) disable TIMER0A during setup
   TIMER0_CFG_R = 0x00000000;    // 2) configure for 32-bit mode
   TIMER0_TAMR_R = 0x00000002;   // 3) configure for periodic mode, default down-count settings
-  TIMER0_TAILR_R = 800000-1;    // 4) reload value
+  TIMER0_TAILR_R = 8000-1;    // 4) reload value
   TIMER0_TAPR_R = 0;            // 5) bus clock resolution
   TIMER0_ICR_R = 0x00000001;    // 6) clear TIMER0A timeout flag
   TIMER0_IMR_R = 0x00000001;    // 7) arm timeout interrupt
@@ -125,26 +129,28 @@ void Timer0A_Init(void){
 
 void Timer0A_Handler(void){
   TIMER0_ICR_R = TIMER_ICR_TATOCINT;// acknowledge timer0A timeout
-	PF2 ^= 0x04;
+	// PF2 ^= 0x04;
   prevSeconds = currentSeconds;
 	currentSeconds += 1;
 	
 	if (currentSeconds>=60) {
 		currentSeconds = 0;
-		prevMinute = currentMinute;
 		currentMinute += 1;
 		updateTimeFlag = 1;
 	}
 	
 	if (currentMinute>=60) {
 		currentMinute = 0;
-		prevHour = currentHour;
 		currentHour += 1;
 		updateTimeFlag = 1;
 	}
 	
 	if (currentHour>=24) {
 		currentHour = 0;
+	}
+	
+	if (alarmHour == currentHour && alarmMinute == currentMinute && alarmActive){
+		soundFlag = 1;
 	}
 }
 

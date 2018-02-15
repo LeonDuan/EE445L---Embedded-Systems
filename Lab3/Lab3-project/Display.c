@@ -101,3 +101,34 @@ void clear_Screen(char * message){
 	ST7735_SetCursor(0,0);
 	ST7735_OutString(message);
 }
+
+void draw_Arrow(int x, int y){
+	ST7735_DrawChar(x, y, 94, 0, ST7735_Color565(228,228,228), 3);
+}
+
+extern uint32_t alarmActive;
+void draw_Alarm_Status(int x, int y){
+	ST7735_SetCursor(x, y);
+	if(alarmActive){
+		ST7735_DrawChar(x, y, 'O', 0, ST7735_Color565(228,228,228), 1);
+		ST7735_DrawChar(x + 6, y, 'N', 0, ST7735_Color565(228,228,228), 1);
+		ST7735_DrawChar(x + 12, y, ' ', 0, ST7735_Color565(228,228,228), 1);
+	}
+	else{
+		ST7735_DrawChar(x, y, 'O', 0, ST7735_Color565(228,228,228), 1);
+		ST7735_DrawChar(x + 6, y, 'F', 0, ST7735_Color565(228,228,228), 1);
+		ST7735_DrawChar(x + 12, y, 'F', 0, ST7735_Color565(228,228,228), 1);
+	}
+}
+
+extern int currentMode;
+void clear_Arrow_Area(void) {
+	ST7735_FillRect(0, 120, 128, 40, ST7735_Color565(228,228,228));
+	if(currentMode == 2){
+			draw_Alarm_Status(55, 125);
+	}
+}
+
+void draw_Alarm_Status_Arrow(int x, int y) {
+	ST7735_DrawChar(x, y, '>', 0, ST7735_Color565(228,228,228), 2);
+}

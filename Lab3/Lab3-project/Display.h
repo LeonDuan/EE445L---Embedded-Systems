@@ -30,5 +30,8 @@ void draw_ClockHand(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t
 void draw_DigitalClock(uint16_t hour, uint16_t minute, uint16_t color);
 void init_LCD(void);
 void clear_Screen(char * message);
-
+void draw_Arrow(int x, int y);
+void clear_Arrow_Area(void);
+void draw_Alarm_Status(int x, int y);
+void draw_Alarm_Status_Arrow(int x, int y);
 #endif

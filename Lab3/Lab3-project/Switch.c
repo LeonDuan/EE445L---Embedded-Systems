@@ -204,14 +204,35 @@ void Switch_Init(void){
 //  while(Switch_Input()==0){};
 //  SysTick_Wait(800000); // 10ms
 //}
-  
+extern uint32_t alarmActive;
+extern uint32_t soundFlag;
+extern uint32_t alarmHour;
+extern uint32_t alarmMinute;
+extern uint32_t currentHour;
+extern uint32_t currentMinute;
+
 void GPIOPortE_Handler() {
 	int interrupt_trigger = GPIO_PORTE_MIS_R;
-	int delay = 10000;
+	int delay = 5000;
 	while (delay) {
 		delay--;
 	}
-	if (interrupt_trigger&0x01) {
+	
+	if(soundFlag){ // shut down alarm
+		if((!PE0) || (!PE1) || (!PE2)){
+			soundFlag = 0;
+			alarmActive = 0;
+		}
+		else if(!PE3) {
+			soundFlag = 0;
+			alarmMinute = (currentMinute + 5) % 60;
+			if(currentMinute + 5 >= 60) {
+				alarmHour ++;
+			}
+		}
+	}
+	else if (interrupt_trigger&0x01) {
+
 		if (!PE0) {
 			GPIO_PORTE_ICR_R = 0x01;
 			if (soundFlag) {
@@ -246,5 +267,5 @@ void GPIOPortE_Handler() {
 		}
 	}
 	
-	GPIO_PORTE_ICR_R = 0x07;
+	GPIO_PORTE_ICR_R = 0xF;
 }

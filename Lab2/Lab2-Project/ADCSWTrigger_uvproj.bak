@@ -430,6 +430,21 @@
               <FileType>1</FileType>
               <FilePath>.\ST7735.c</FilePath>
             </File>
+            <File>
+              <FileName>ST7735_ExtraFeature.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\ST7735_ExtraFeature.c</FilePath>
+            </File>
+            <File>
+              <FileName>ADCSWTrigger.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\ADCSWTrigger.h</FilePath>
+            </File>
+            <File>
+              <FileName>ST7735_ExtraFeature.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\ST7735_ExtraFeature.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
