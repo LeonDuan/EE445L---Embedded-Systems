@@ -435,6 +435,11 @@
               <FileType>1</FileType>
               <FilePath>.\Lab1.c</FilePath>
             </File>
+            <File>
+              <FileName>ST7735.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Lab2\Lab2-Project\ST7735.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

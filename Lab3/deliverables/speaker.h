@@ -1,0 +1,1 @@
+void enableSpeaker(int enable);
