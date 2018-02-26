@@ -2,9 +2,9 @@
 # Taken mostly from http://www.keil.com/support/man/docs/uv4/uv4_b_filetypes.htm
 
 # User-specific uVision files
-# *.opt
-# *.uvopt
-# *.uvoptx
+*.opt
+*.uvopt
+*.uvoptx
 *.uvgui
 *.uvguix.*
 
