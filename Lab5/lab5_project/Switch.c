@@ -23,6 +23,7 @@
 extern uint16_t soundFlag;
 extern uint16_t resetFlag;
 extern uint16_t pauseFlag;
+extern uint16_t instrumentFlag;
 
 void Switch_Init(void){ 
   SYSCTL_RCGCGPIO_R |= 0x00000010;     // 1) activate clock for Port A
@@ -64,6 +65,11 @@ void GPIOPortE_Handler() {
 			GPIO_PORTE_ICR_R = 0x02;
 			resetFlag = 1;
 			pauseFlag = 1;
+		}
+	}
+	if (interrupt_trigger&0x03) {
+		if (!PE2) {
+			instrumentFlag = (instrumentFlag + 1)%3;
 		}
 	}
 }

@@ -27,10 +27,17 @@
 // see Figure 7.19 for complete schematic
 
 #include <stdint.h>
+#include "../inc/tm4c123gh6pm.h"
+#include "PLL.h"
 #include "DAC.h"
 #include "TimeUtil.h"
 #include "Music.h"
 #include "Switch.h"
+
+void DisableInterrupts(void); // Disable interrupts
+void EnableInterrupts(void);  // Enable interrupts
+long StartCritical (void);    // previous I bit, disable interrupts
+void EndCritical(long sr);    // restore I bit to previous value
 
 // 12-bit 32-element sine wave
 // multiply each value by 2 to shift into bits 12:1 of SSI packet
@@ -39,29 +46,17 @@
 // that means when wave[n] = 0x0000 (LSB = 0), output = 0
 //                 wave[n] = 0x1000 (LSB = 0), output = Vref
 //                 wave[n] = 0x1FFE (LSB = 0), output = 2*Vref
-const uint16_t wave[32] = {
-  2048*2,2448*2,2832*2,3186*2,3496*2,3751*2,3940*2,4057*2,4095*2,4057*2,3940*2,
-  3751*2,3496*2,3186*2,2832*2,2448*2,2048*2,1648*2,1264*2,910*2,600*2,345*2,
-  156*2,39*2,0*2,39*2,156*2,345*2,600*2,910*2,1264*2,1648*2};
 
 int main(void){
-  uint32_t i=0;
-  DAC_Init(0x1000);                  // initialize with command: Vout = Vref
-  SysTick_Init();
-  while(1){
-    DAC_Out(wave[i&0x1F]);
-    i = i + 1;
-    // calculated frequencies are not exact, due to the impreciseness of delay loops
-    // assumes using 16 MHz PIOSC (default setting for clock source)
-    // maximum frequency with 16 MHz PIOSC: (8,000,000 bits/1 sec)*(1 sample/16 bits)*(1 wave/32 sample) = 15,625 Hz
-    // maximum frequency with 20 MHz PLL: (10,000,000 bits/1 sec)*(1 sample/16 bits)*(1 wave/32 sample) = 19,531.25 Hz
-//    SysTick_Wait(0);                 // ?? kHz sine wave (actually 12,000 Hz)
-//    SysTick_Wait(9);                 // 55.6 kHz sine wave (actually 10,000 Hz)
-//    SysTick_Wait(15);                // 33.3 kHz sine wave (actually 8,500 Hz)
-//    SysTick_Wait(19);                // 26.3 kHz sine wave (actually 8,500 Hz)
-//    SysTick_Wait(64);                // 7.81 kHz sine wave (actually 4,800 Hz)
-//    SysTick_Wait(99);                // 5.05 kHz sine wave (actually 3,500 Hz)
-    SysTick_Wait(1136);              // 440 Hz sine wave (actually 420 Hz)
-//    SysTick_Wait(50000);             // 10 Hz sine wave (actually 9.9 Hz)
-  }
+  PLL_Init(Bus80MHz);
+//	Switch_Init();
+//	DAC_Init();
+//	SysTick_Init();
+//	Timer0A_Init();
+//	
+//	EnableInterrupts();
+//	
+//	playMusic(1);
+	
+	while(1) {}
 }

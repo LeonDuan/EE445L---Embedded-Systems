@@ -30,7 +30,7 @@
 // inputs:  initial voltage output (0 to 4095)
 // outputs: none
 // assumes: system clock rate less than 20 MHz
-void DAC_Init(uint16_t data);
+void DAC_Init(void);
 
 //********DAC_Out*****************
 // Send data to Max5353 12-bit DAC
