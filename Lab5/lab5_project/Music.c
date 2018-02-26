@@ -35,7 +35,6 @@ Music song3;
 uint16_t musicLength;
 Note *music;
 uint16_t resetFlag = 0;
-uint16_t soundFlag = 0;
 uint16_t pauseFlag = 0;
 Instruments instrumentFlag = flute;
 

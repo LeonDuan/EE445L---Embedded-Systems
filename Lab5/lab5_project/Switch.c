@@ -52,13 +52,9 @@ void GPIOPortE_Handler() {
 	if(interrupt_trigger&0x01) {
 		if (!PE0) {
 			GPIO_PORTE_ICR_R = 0x01;
-			if (soundFlag!=0) {
-				if (pauseFlag==0) pauseFlag = 1;
-			}
-			else {
-				if (pauseFlag!=0) pauseFlag = 0;
-			}
-		}	
+			if (pauseFlag==0) pauseFlag = 1;
+			else pauseFlag = 0;
+		}
 	}
 	if (interrupt_trigger&0x02) {
 		if (!PE1) {
