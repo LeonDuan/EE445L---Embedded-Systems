@@ -47,16 +47,27 @@ void EndCritical(long sr);    // restore I bit to previous value
 //                 wave[n] = 0x1000 (LSB = 0), output = Vref
 //                 wave[n] = 0x1FFE (LSB = 0), output = 2*Vref
 
+void PortF_Init(void){ 
+  SYSCTL_RCGCGPIO_R |= 0x20;            // activate port F
+  GPIO_PORTF_DIR_R |= 0x06;             // make PF2, PF1 out (built-in LED)
+  GPIO_PORTF_AFSEL_R &= ~0x06;          // disable alt funct on PF2, PF1
+  GPIO_PORTF_DEN_R |= 0x06;             // enable digital I/O on PF2, PF1
+                                        // configure PF2 as GPIO
+  GPIO_PORTF_PCTL_R = (GPIO_PORTF_PCTL_R&0xFFFFF00F)+0x00000000;
+  GPIO_PORTF_AMSEL_R = 0;    
+}
+
 int main(void){
   PLL_Init(Bus80MHz);
-//	Switch_Init();
-//	DAC_Init();
-//	SysTick_Init();
-//	Timer0A_Init();
-//	
-//	EnableInterrupts();
-//	
-//	playMusic(1);
+	PortF_Init();
+	Switch_Init();
+	DAC_Init();
+	Timer1A_Init();
+	Timer0A_Init();
+	
+	EnableInterrupts();
+	
+	playMusic(1);
 	
 	while(1) {}
 }

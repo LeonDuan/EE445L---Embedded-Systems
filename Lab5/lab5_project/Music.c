@@ -55,20 +55,20 @@ uint16_t musicLength;
 Note *music;
 uint16_t resetFlag = 0;
 uint16_t pauseFlag = 0;
-Instruments instrumentFlag = flute;
+Instruments instrumentFlag = trumpet;
 
 void playMusic(uint16_t song){
 	switch(song) {
 		case 1:
 			music = song1.song;
 			musicLength = song1.song_length;
-			TIMER0_TAILR_R = 8000000*60/song1.tempo/4;
+			TIMER0_TAILR_R = (80000000/song1.tempo)*60/4;
 			resetFlag = 1;
 			break;
 		case 2:
 			music = song2.song;
 			musicLength = song2.song_length;
-			TIMER0_TAILR_R = 8000000*60/song2.tempo/4;
+			TIMER0_TAILR_R = (80000000/song2.tempo)*60/16;
 			resetFlag = 1;
 			break;
 	}
