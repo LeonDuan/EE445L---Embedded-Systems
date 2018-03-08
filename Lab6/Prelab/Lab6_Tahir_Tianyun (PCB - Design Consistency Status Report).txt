@@ -1,0 +1,24 @@
+Design Consistency Status Report
+--------------------------------
+
+Report File:        D:\EE445L\labs\Lab6\Prelab\Lab6_Tahir_Tianyun (PCB - Design Consistency Status Report).txt
+Report Written:     Tuesday, March 06, 2018
+Design Path:        D:\EE445L\labs\Lab6\Prelab\Lab6_Tahir_Tianyun.pcb
+Design Title:       
+Created:            01/28/2013 11:01:41 PM
+Last Saved:         03/06/2018 11:57:21 AM
+Editing Time:       963 min
+Units:              mil (precision 0)
+
+
+Checking integrity of Schematic "D:\EE445L\labs\Lab6\Prelab\Lab6_Tahir_Tianyun.sch" with PCB "D:\EE445L\labs\Lab6\Prelab\Lab6_Tahir_Tianyun.pcb"
+================================================================================================================================================
+
+The PCB and Schematic designs do not match.
+To bring them into line, you will need to make the following changes to the PCB design:
+
+Component 'ST7735' package 'LCD' in PCB is newer version than Schematic, use Update Component to correct this.
+Component '2N2222' package 'TO92' in PCB is newer version than Schematic, use Update Component to correct this.
+
+
+End Of Report.

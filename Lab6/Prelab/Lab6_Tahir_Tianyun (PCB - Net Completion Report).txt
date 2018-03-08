@@ -1,0 +1,24 @@
+Net Completion Report
+---------------------
+
+Report File:        D:\EE445L\labs\Lab6\Prelab\Lab6_Tahir_Tianyun (PCB - Net Completion Report).txt
+Report Written:     Tuesday, March 06, 2018
+Design Path:        D:\EE445L\labs\Lab6\Prelab\Lab6_Tahir_Tianyun.pcb
+Design Title:       
+Created:            01/28/2013 11:01:41 PM
+Last Saved:         03/06/2018 9:18:01 AM
+Editing Time:       1013 min
+Units:              mil (precision 0)
+
+
+The following breaks in the circuit have been found:
+
+
+======================================================
+
+    Between C5.2 and U1.3 on net 'GND'
+
+
+Total breaks found : 1
+
+End Of Report.
