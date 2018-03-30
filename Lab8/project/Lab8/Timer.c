@@ -26,6 +26,7 @@
  http://users.ece.utexas.edu/~valvano/
  */
 #include <stdint.h>
+#include "Timer.h"
 #include "..//inc//tm4c123gh6pm.h"
 
 
@@ -43,7 +44,7 @@ void (*PeriodicTask)(void);   // user function
 // Inputs:  task is a pointer to a user function
 //          period in units (1/clockfreq), 32 bits
 // Outputs: none
-void Timer0A_Init(void(*task)(void), uint32_t period){long sr;
+void Timer0_Init(void(*task)(void), uint32_t period){long sr;
   sr = StartCritical(); 
   SYSCTL_RCGCTIMER_R |= 0x01;   // 0) activate TIMER0
   PeriodicTask = task;          // user function
@@ -62,7 +63,7 @@ void Timer0A_Init(void(*task)(void), uint32_t period){long sr;
   EndCritical(sr);
 }
 
-void Timer0A_Handler(void){
+void Timer0_Handler(void){
   TIMER0_ICR_R = TIMER_ICR_TATOCINT;// acknowledge timer0A timeout
   (*PeriodicTask)();                // execute user task
 }
