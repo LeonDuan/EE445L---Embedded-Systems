@@ -2,118 +2,18 @@ Forward Design Changes Report
 -----------------------------
 
 Report File:        D:\UT Austin\Spring 2018\EE 445L\EE445L---Embedded-Systems\Lab7\Lab7_TM4C123starter (PCB - Forward Design Changes Report).txt
-Report Written:     Tuesday, March 13, 2018
+Report Written:     Friday, March 23, 2018
 Design Path:        D:\UT Austin\Spring 2018\EE 445L\EE445L---Embedded-Systems\Lab7\Lab7_TM4C123starter.pcb
 Design Title:       
 Created:            1/29/2013 12:01:41 AM
-Last Saved:         3/6/2018 11:44:44 AM
-Editing Time:       852 min
+Last Saved:         3/23/2018 6:46:39 AM
+Editing Time:       7407 min
 Units:              mil (precision 0)
 
-Disconnected pin "U3.2" from net "+3.3".
-Disconnected pin "U3.3" from net "GND".
-Disconnected pin "U3.25" from net "LDO".
-Disconnected pin "U3.26" from net "+3.3".
-Disconnected pin "U3.27" from net "GND".
-Disconnected pin "U3.40" from net "OSC0".
-Disconnected pin "U3.39" from net "GND".
-Disconnected pin "U3.38" from net "RST".
-Disconnected pin "U3.37" from net "+3.3".
-Disconnected pin "U3.35" from net "GND".
-Disconnected pin "U3.34" from net "GND".
-Disconnected pin "U3.32" from net "Wake".
-Disconnected pin "U3.12" from net "GND".
-Disconnected pin "U3.11" from net "+3.3".
-Disconnected pin "U3.41" from net "OSC1".
-Disconnected pin "U3.42" from net "+3.3".
-Disconnected pin "U3.49" from net "PC3".
-Disconnected pin "U3.50" from net "PC2".
-Disconnected pin "U3.51" from net "PC1".
-Disconnected pin "U3.52" from net "PC0".
-Disconnected pin "U3.54" from net "+3.3".
-Disconnected pin "U3.55" from net "GND".
-Disconnected pin "U3.56" from net "LDO".
-Disconnected pin "U5.3" from net "N0689".
-Disconnected pin "U5.5" from net "N0689".
-Disconnected pin "U5.8" from net "+3V3".
-Disconnected pin "R5.2" from net "+3V3".
-Disconnected pin "U6.1" from net "N0689".
-Disconnected pin "U6.5" from net "N0692".
-Disconnected pin "U6.6" from net "N0699".
-Disconnected pin "U6.7" from net "N0689".
-Disconnected pin "U6.8" from net "N0700".
-Disconnected pin "R9.1" from net "N0692".
-Disconnected pin "C3.1" from net "N0689".
-Disconnected pin "C4.1" from net "N0689".
-Disconnected pin "C4.2" from net "N0699".
-Disconnected pin "C5.1" from net "+3V3".
-Disconnected pin "C5.2" from net "N0689".
-Disconnected pin "J2.1" from net "N0692".
-Disconnected pin "J2.2" from net "N0700".
-Disconnected pin "U7.3" from net "N0691".
-Disconnected pin "R7.1" from net "N0691".
+Disconnected pin "U1.22" from net "GND".
+Disconnected pin "U1.20" from net "GND".
 
-Deleted component reference "U3".
-
-Deleted net "+3V3".
-Deleted net "N0689".
-Deleted net "N0691".
-Deleted net "N0692".
-Deleted net "N0699".
-Deleted net "N0700".
-
-Error: Unable to add component reference "U1" of component "VL53L0X", package "LGA12_ST" because No PCB information for Component "VL53L0X"..
-
-Connected pin "U4.49" to net "PC3".
-Connected pin "U4.50" to net "PC2".
-Connected pin "U4.51" to net "PC1".
-Connected pin "U4.52" to net "PC0".
-Connected pin "U4.2" to net "+3.3".
-Connected pin "U4.3" to net "GND".
-Connected pin "U4.11" to net "+3.3".
-Connected pin "U4.12" to net "GND".
-Connected pin "U4.25" to net "LDO".
-Connected pin "U4.26" to net "+3.3".
-Connected pin "U4.27" to net "GND".
-Connected pin "U4.42" to net "+3.3".
-Connected pin "U4.41" to net "OSC1".
-Connected pin "U4.40" to net "OSC0".
-Connected pin "U4.39" to net "GND".
-Connected pin "U4.54" to net "+3.3".
-Connected pin "U4.55" to net "GND".
-Connected pin "U4.56" to net "LDO".
-Connected pin "U4.38" to net "RST".
-Connected pin "U4.37" to net "+3.3".
-Connected pin "U4.35" to net "GND".
-Connected pin "U4.34" to net "GND".
-Connected pin "U4.32" to net "Wake".
-Connected pin "U5.3" to net "GND".
-Connected pin "U5.5" to net "GND".
-Connected pin "U5.8" to net "+3.3".
-Connected pin "R5.2" to net "+3.3".
-Connected pin "U6.8" to net "Vo-".
-Connected pin "U6.1" to net "GND".
-Connected pin "U6.7" to net "GND".
-Connected pin "U6.6" to net "+5V".
-Connected pin "U6.5" to net "Vo-".
-Connected pin "R9.1" to net "Vo-".
-Connected pin "C3.1" to net "GND".
-Connected pin "C4.1" to net "GND".
-Connected pin "C4.2" to net "+5V".
-Connected pin "C5.1" to net "+3.3".
-Connected pin "C5.2" to net "GND".
-Connected pin "J2.1" to net "Vo-".
-Connected pin "J2.2" to net "Vo-".
-Connected pin "U7.3" to net "GND".
-Connected pin "R7.1" to net "GND".
-
-Net N0690 renamed to Vref
-Net N0697 renamed to Vout
-Net N0698 renamed to Vminus
-Net N0701 renamed to Vplus
-Net N0702 renamed to PF1
-Net N0703 renamed to PF2
-Net N0704 renamed to PF3
+Deleted net class "default".
 
 
 End Of Report.

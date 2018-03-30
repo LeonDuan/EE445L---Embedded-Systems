@@ -151,6 +151,7 @@ tantalum_0603||#SM=2=RC0603polarized||@[Description]=capacitor SM||@Manufacturer
 tantalum_0805||#SM=2=SM0805||@Manufacturer=||@Manufacturer Part Number=||@Distributor=||@Distributor Part Number=||@C=10uF
 tantalum_SM||#SM=2=CAP_TAJA_SM||@Manufacturer=||@Manufacturer Part Number=||@Distributor=||@Distributor Part Number=||@C=10uF
 testpoint||#BIG=1=testpoint_Big||@Manufacturer=||@Manufacturer Part Number=||@Distributor=||@Distributor Part Number=||#SIP=1=testpoint||@Manufacturer=||@Manufacturer Part Number=||@Distributor=||@Distributor Part Number=
+Testpoint_TwoHole||#DIL=2=testpoint_TwoHole||@[Description]=Test point||@Manufacturer=||@Manufacturer Part Number=||@Distributor=||@Distributor Part Number=
 Thermistor||#SIP=2=2pinHeader||@Manufacturer=||@Manufacturer Part Number=||@Distributor=||@Distributor Part Number=
 TIP120||#TO220=3=TO220-2||@[Description]=Darlington NPN||@Manufacturer=||@Manufacturer Part Number=||@Distributor=||@Distributor Part Number=
 TIP120flat||#TO220=4=TO220-2flat||@Manufacturer=||@Manufacturer Part Number=||@Distributor=||@Distributor Part Number=
@@ -176,7 +177,7 @@ USB_Mini-B||#MISC=7=USB_Mini-B||@Manufacturer=||@Manufacturer Part Number=||@Dis
 USB_Mini-B_SM||#SM=9=MiniUSB_SM||@Manufacturer=||@Manufacturer Part Number=||@Distributor=||@Distributor Part Number=
 USB_Mini-B_SM_mount||#SM=9=MiniUSB_SM||@Manufacturer=||@Manufacturer Part Number=||@Distributor=||@Distributor Part Number=||#SML=9=MiniUSB_SM_mount||@Manufacturer=||@Manufacturer Part Number=||@Distributor=||@Distributor Part Number=
 Variable Resistor(POT)||#RV=3=3pinHeader||@Manufacturer=||@Manufacturer Part Number=||@Distributor=||@Distributor Part Number=||@Value=||#MISC=3=POT||@Manufacturer=||@Manufacturer Part Number=||@Distributor=||@Distributor Part Number=
-VL53L0X||#LGA12_ST=-1=LGA12_ST||@[Description]=pbVL53L0X/b - Laser Time of Flight Sensor (2M range)/p||@Value=VL53L0X||@Manufacturer=||@Manufacturer Part Number=||@Distributor=||@Distributor Part Number=
+VL53L0X||#LGA12_ST=12=LGA12_ST||@[Description]=pbVL53L0X/b - Laser Time of Flight Sensor (2M range)/p||@Value=VL53L0X||@Manufacturer=||@Manufacturer Part Number=||@Distributor=||@Distributor Part Number=
 VLF4012A||#SM=2=VLF4012A||@[Description]=Wound inductor||@Manufacturer=||@Manufacturer Part Number=||@Distributor=||@Distributor Part Number=||@Inductance=
 XBee||#DIP=20=XBee||@Manufacturer=||@Manufacturer Part Number=||@Distributor=||@Distributor Part Number=||#SKDIP=20=XBeeModule||@Manufacturer=||@Manufacturer Part Number=||@Distributor=||@Distributor Part Number=
 XFL4020||#SM=2=XFL4020||@[Description]=inductor||@Manufacturer=||@Manufacturer Part Number=||@Distributor=||@Distributor Part Number=

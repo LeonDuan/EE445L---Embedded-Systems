@@ -1,0 +1,24 @@
+Forward Design Changes Report
+-----------------------------
+
+Report File:        D:\UT Austin\Spring 2018\EE 445L\EE445L---Embedded-Systems\Lab7\Lab7_Tahir_Tianyun (PCB - Forward Design Changes Report).txt
+Report Written:     Thursday, March 29, 2018
+Design Path:        D:\UT Austin\Spring 2018\EE 445L\EE445L---Embedded-Systems\Lab7\Lab7_Tahir_Tianyun.pcb
+Design Title:       
+Created:            1/29/2013 12:01:41 AM
+Last Saved:         3/29/2018 7:56:37 AM
+Editing Time:       9020 min
+Units:              mil (precision 0)
+
+Disconnected pin "R1.2" from net "+3V3".
+Disconnected pin "R2.2" from net "+3V3".
+
+Deleted net "+3V3".
+
+Deleted net class "default".
+
+Connected pin "R1.2" to net "+3.3".
+Connected pin "R2.2" to net "+3.3".
+
+
+End Of Report.

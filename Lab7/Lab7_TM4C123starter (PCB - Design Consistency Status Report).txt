@@ -2,12 +2,12 @@ Design Consistency Status Report
 --------------------------------
 
 Report File:        D:\UT Austin\Spring 2018\EE 445L\EE445L---Embedded-Systems\Lab7\Lab7_TM4C123starter (PCB - Design Consistency Status Report).txt
-Report Written:     Tuesday, March 13, 2018
+Report Written:     Friday, March 23, 2018
 Design Path:        D:\UT Austin\Spring 2018\EE 445L\EE445L---Embedded-Systems\Lab7\Lab7_TM4C123starter.pcb
 Design Title:       
 Created:            1/29/2013 12:01:41 AM
-Last Saved:         3/6/2018 11:44:44 AM
-Editing Time:       852 min
+Last Saved:         3/23/2018 6:46:39 AM
+Editing Time:       7407 min
 Units:              mil (precision 0)
 
 
