@@ -13,7 +13,7 @@ void (*PeriodicTask2A)(void);   // user function
 void (*PeriodicTask3A)(void);   // user function
 
 
-void Timer0A_Init(void(*task)(void), uint32_t period){long sr;
+void Timer0A_Init(void(*task)(void), uint32_t period){
   SYSCTL_RCGCTIMER_R |= 0x01;   // 0) activate TIMER0
   PeriodicTask0A = task;          // user function
   TIMER0_CTL_R = 0x00000000;    // 1) disable TIMER0A during setup

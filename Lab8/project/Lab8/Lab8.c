@@ -41,6 +41,8 @@ int main(void) {
 	draw_Enemy_Ship(1, 80, 50);
 	draw_Enemy_Ship(2, 50, 80);
 	draw_Enemy_Ship(3, 110, 100);
+	draw_Boss(1, 80, 60);
+	draw_Boss(2, 160, 60);
 	
 	EnableInterrupts();
   while(1){
