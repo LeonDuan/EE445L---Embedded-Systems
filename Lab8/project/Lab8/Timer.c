@@ -14,7 +14,6 @@ void (*PeriodicTask3A)(void);   // user function
 
 
 void Timer0A_Init(void(*task)(void), uint32_t period){long sr;
-  sr = StartCritical(); 
   SYSCTL_RCGCTIMER_R |= 0x01;   // 0) activate TIMER0
   PeriodicTask0A = task;          // user function
   TIMER0_CTL_R = 0x00000000;    // 1) disable TIMER0A during setup
@@ -29,7 +28,6 @@ void Timer0A_Init(void(*task)(void), uint32_t period){long sr;
 // vector number 35, interrupt number 19
   NVIC_EN0_R = 1<<19;           // 9) enable IRQ 19 in NVIC
   TIMER0_CTL_R = 0x00000001;    // 10) enable TIMER0A
-  EndCritical(sr);
 }
 
 void Timer0A_Handler(void){

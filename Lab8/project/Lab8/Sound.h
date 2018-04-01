@@ -68,25 +68,6 @@ typedef struct {
 	uint16_t tempo;
 } Music;
 
-Note Bethoveen[66] = {
-	{E4,q},{E4,q},{F4,q},{G4,q},
-	{G4,q},{F4,q},{E4,q},{D4,q},
-	{C4,q},{C4,q},{D4,q},{E4,q},
-	{E4,q+e},{D4,e},{D4,h},
-	{E4,q},{E4,q},{F4,q},{G4,q},
-	{G4,q},{F4,q},{E4,q},{D4,q},
-	{C4,q},{C4,q},{D4,q},{E4,q},
-	{D4,q+e},{C4,e},{C4,h},
-	{D4,q},{D4,q},{E4,q},{C4,q},
-	{D4,q},{E4,e},{F4,e},{E4,q},{C4,q},
-	{D4,q},{E4,e},{F4,e},{E4,q},{D4,q},
-	{C4,q},{D4,q},{G3,h},
-	{E4,q},{E4,q},{F4,q},{G4,q},
-	{G4,q},{F4,q},{E4,q},{D4,q},
-	{C4,q},{C4,q},{D4,q},{E4,q},
-	{D4,q},{D4,e},{C4,e},{C4,h}
-};
-
 void Sound_Init(void);
 void Sound_Play(uint16_t song);
 

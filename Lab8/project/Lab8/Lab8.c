@@ -6,12 +6,18 @@
 #include "Game.h"
 #include "Proximity.h"
 #include "Switch.h"
+#include "Graphics.h"
 
 void EnableInterrupts(void);  // Enable interrupts
 void WaitForInterrupt(void);  // low power mode
+void DisableInterrupts(void); // Disable interrupts
 
+uint16_t cur_stage = 1;
 void test(void) {
 	GPIO_PORTF_DATA_R = GPIO_PORTF_DATA_R^0x04; // toggle PF2
+	cur_stage ++;
+	if (cur_stage == 4) cur_stage = 1;
+	draw_Explosion(cur_stage, 50,50);
 }
 
 void PortF_Init(void){
@@ -26,9 +32,16 @@ void PortF_Init(void){
 }
 
 int main(void) {
-	PLL_Init(Bus80MHz);         // set system clock to 50 MHz
+	PLL_Init(Bus80MHz);         // set system clock to 80 MHz
 	PortF_Init();
-	Timer3A_Init(&test, 50000000/16);
+	DisableInterrupts();
+	Timer0A_Init(&test, 40000000);
+	Init_Graphics();
+	draw_Main_Ship(20, 20);
+	draw_Enemy_Ship(1, 80, 50);
+	draw_Enemy_Ship(2, 50, 80);
+	draw_Enemy_Ship(3, 110, 100);
+	
 	EnableInterrupts();
   while(1){
     WaitForInterrupt();
