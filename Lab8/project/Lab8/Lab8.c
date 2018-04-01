@@ -2,6 +2,10 @@
 #include "../inc/tm4c123gh6pm.h"
 #include "PLL.h"
 #include "Timer.h"
+#include "Sound.h"
+#include "Game.h"
+#include "Proximity.h"
+#include "Switch.h"
 
 void EnableInterrupts(void);  // Enable interrupts
 void WaitForInterrupt(void);  // low power mode

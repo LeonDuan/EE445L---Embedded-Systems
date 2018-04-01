@@ -21,8 +21,8 @@ void DAC_Init(void){
 }
 
 void DAC_Out(uint32_t data){
-	GPIO_PORTA_DATA_R &= ~0x08;        // PF3 FSS low
-  while((SSI0_SR_R&0x00000002)==0){};// SSI Transmit FIFO Not Full
-  SSI0_DR_R = data;                  // data out
-  GPIO_PORTA_DATA_R |= 0x08;         // PF3 FSS high
+	GPIO_PORTF_DATA_R &= ~0x08;        // PF3 FSS low
+  while((SSI1_SR_R&0x00000002)==0){};// SSI Transmit FIFO Not Full
+  SSI1_DR_R = data;                  // data out
+  GPIO_PORTF_DATA_R |= 0x08;         // PF3 FSS high
 }
