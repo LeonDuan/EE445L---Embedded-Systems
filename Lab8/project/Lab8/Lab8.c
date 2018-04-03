@@ -13,13 +13,13 @@ void WaitForInterrupt(void);  // low power mode
 void DisableInterrupts(void); // Disable interrupts
 
 uint16_t cur_stage = 1;
-void test(void) {
-	GPIO_PORTF_DATA_R = GPIO_PORTF_DATA_R^0x04; // toggle PF2
+void Graphics_Test(void) {
 	cur_stage ++;
 	if (cur_stage == 4) cur_stage = 1;
 	draw_Explosion(cur_stage, 50,50);
 }
 
+// for heartbeat
 void PortF_Init(void){
 	SYSCTL_RCGCGPIO_R |= 0x20;  // activate port F
 	while ((SYSCTL_RCGCGPIO_R & 0x20) == 0){}
@@ -31,21 +31,29 @@ void PortF_Init(void){
   GPIO_PORTF_AMSEL_R = 0;     // disable analog functionality on PF 
 }
 
+uint16_t tof_buffer[1000];
+
+// dummy code for testing switches
+void Switch_Test(){
+	GPIO_PORTF_DATA_R = GPIO_PORTF_DATA_R^0x04; // toggle PF2
+}
+
 int main(void) {
 	PLL_Init(Bus80MHz);         // set system clock to 80 MHz
-	PortF_Init();
+	
 	DisableInterrupts();
-	Timer0A_Init(&test, 40000000);
+	PortF_Init();								// heartbeat
+  Timer0A_Init(&Graphics_Test, 40000000);
 	Init_Graphics();
+  Proximity_Init();
 	draw_Main_Ship(20, 20);
 	draw_Enemy_Ship(1, 80, 50);
 	draw_Enemy_Ship(2, 50, 80);
 	draw_Enemy_Ship(3, 110, 100);
 	draw_Boss(1, 80, 60);
 	draw_Boss(2, 160, 60);
-	
+	Switch_Init(&Switch_Test, &Switch_Test);
+
 	EnableInterrupts();
-  while(1){
-    WaitForInterrupt();
-  }
+	while(1){}
 }

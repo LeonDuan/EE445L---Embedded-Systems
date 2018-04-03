@@ -15,7 +15,7 @@
 #define I2C_MCS_BUSY            0x00000001  // I2C Busy
 #define I2C_MCR_MFE             0x00000010  // I2C Master Function Enable
 
-#define MAXRETRIES              5           // number of receive attempts before giving up
+#define MAXRETRIES              10           // number of receive attempts before giving up
 void Proximity_Init(void){
   SYSCTL_RCGCI2C_R |= 0x0008;           // activate I2C3
   SYSCTL_RCGCGPIO_R |= 0x0008;          // activate port D
@@ -205,8 +205,8 @@ uint32_t I2C_Send3(int8_t slave, uint8_t data1, uint8_t data2, uint8_t data3){
   return (I2C3_MCS_R&(I2C_MCS_DATACK|I2C_MCS_ADRACK|I2C_MCS_ERROR));
 }
 
-uint32_t Proximity_Read(){
-	uint32_t distance;
-	
+uint16_t Proximity_Read(){
+	uint16_t distance;
+	distance = I2C_Recv2(0x29);
 	return distance;
 }

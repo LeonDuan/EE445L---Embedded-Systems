@@ -12,7 +12,7 @@ void (*TouchTask_PE2)(void);  // user function to be executed on release
 void PortE_Arm(void){
 	GPIO_PORTE_ICR_R = 0x06;      // (e) clear flag 1,2
   GPIO_PORTE_IM_R |= 0x06;      // (f) arm interrupt on PE1,2
-  NVIC_PRI1_R = (NVIC_PRI1_R&0xFF0FFFF00)|0x00000080; // (g) priority 4
+  NVIC_PRI1_R = (NVIC_PRI1_R&0xFFFFFF00)|0x00000080; // (g) priority 4
   NVIC_EN0_R = 0x00000010;      // (h) enable interrupt 4 in NVIC
 }
 
@@ -38,7 +38,7 @@ void Switch_Init(void(*touchtask_PE1)(void), void(*touchtask_PE2)(void)){
 }
 
 void TimerTask_2A (void){
-	TIMER0_IMR_R = 0x00000000;    // disarm timeout interrupt
+	TIMER2_IMR_R &= ~0x00000001;    // disarm timeout interrupt
   PortE_Arm();   // start GPIO
 }
 
@@ -47,5 +47,5 @@ void GPIOPortE_Handler(void){
 	GPIO_PORTE_IM_R &= ~0x06;
 	if (interrupt_trigger == 0x02) (*TouchTask_PE1)();
 	if (interrupt_trigger == 0x04) (*TouchTask_PE2)();
-	Timer2A_Arm(&TimerTask_2A,160000);
+	Timer2A_Arm(&TimerTask_2A, 800000);
 }

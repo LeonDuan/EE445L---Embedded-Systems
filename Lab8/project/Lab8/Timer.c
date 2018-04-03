@@ -74,7 +74,7 @@ void Timer2A_Arm(void(*task)(void), uint32_t period){
 }
 
 void Timer2A_Handler(void){
-  TIMER2_ICR_R = TIMER_ICR_TATOCINT;// acknowledge TIMER2A timeout
+//  TIMER2_ICR_R = TIMER_ICR_TATOCINT;// acknowledge TIMER2A timeout
   (*PeriodicTask2A)();                // execute user task
 }
 
