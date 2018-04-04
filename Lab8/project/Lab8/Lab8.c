@@ -43,7 +43,6 @@ int main(void) {
 	
 	DisableInterrupts();
 	PortF_Init();								// heartbeat
-  Timer0A_Init(&Graphics_Test, 40000000);
 	Init_Graphics();
   Proximity_Init();
 	draw_Main_Ship(20, 20);
@@ -53,7 +52,9 @@ int main(void) {
 	draw_Boss(1, 80, 60);
 	draw_Boss(2, 160, 60);
 	Switch_Init(&Switch_Test, &Switch_Test);
-
+	Sound_Init();
+	
 	EnableInterrupts();
+	Sound_Play(1);
 	while(1){}
 }
