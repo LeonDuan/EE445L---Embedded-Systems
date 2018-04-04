@@ -306,13 +306,13 @@ int iTimeout;
   return 1;
 }
 
-void VL53L0X_Init(void){
+int VL53L0X_Init(void){
 	unsigned char spad_count=0, spad_type_is_aperture=0, ref_spad_map[6];
 	unsigned char ucFirstSPAD, ucSPADsEnabled;
 	int i;
 
 	// set 2.8V mode
-	I2C_Send1(VHV_CONFIG_PAD_SCL_SDA__EXTSUP_HV,I2C_Recv(VHV_CONFIG_PAD_SCL_SDA__EXTSUP_HV)|0x01);
+	volatile uint32_t returncode = I2C_Send1(VHV_CONFIG_PAD_SCL_SDA__EXTSUP_HV,I2C_Recv(VHV_CONFIG_PAD_SCL_SDA__EXTSUP_HV)|0x01);
 	// set I2C standar mode	
 	I2C_SendList(ucI2CMode);
 	stop_variable = I2C_Recv(0x91);
@@ -346,10 +346,11 @@ void VL53L0X_Init(void){
   I2C_Send1(SYSTEM_SEQUENCE_CONFIG, 0xE8);
   setMeasurementTimingBudget(measurement_timing_budget_us);
   I2C_Send1(SYSTEM_SEQUENCE_CONFIG, 0x01);
-  performSingleRefCalibration(0x40);
+  if (!performSingleRefCalibration(0x40)) return 0;
   I2C_Send1(SYSTEM_SEQUENCE_CONFIG, 0x02);
-  performSingleRefCalibration(0x00);
+  if (performSingleRefCalibration(0x00)) return 0;
   I2C_Send1(SYSTEM_SEQUENCE_CONFIG, 0xE8);
+	return 1;
 }
 
 uint16_t VL53L0X_readRangeContinuousMillimeters(void){

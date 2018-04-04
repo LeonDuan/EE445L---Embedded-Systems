@@ -46,16 +46,24 @@ int main(void) {
 	PortF_Init();								// heartbeat
 	Init_Graphics();
   I2C_Init();
-	draw_Main_Ship(20, 20);
-	draw_Enemy_Ship(1, 80, 50);
-	draw_Enemy_Ship(2, 50, 80);
-	draw_Enemy_Ship(3, 110, 100);
-	draw_Boss(1, 80, 60);
-	draw_Boss(2, 160, 60);
-	Switch_Init(&Switch_Test, &Switch_Test);
-	Sound_Init();
-	
-	EnableInterrupts();
-	Sound_Play(1);
-	while(1){}
+	int chk = VL53L0X_Init();
+//	draw_Main_Ship(20, 20);
+//	draw_Enemy_Ship(1, 80, 50);
+//	draw_Enemy_Ship(2, 50, 80);
+//	draw_Enemy_Ship(3, 110, 100);
+//	draw_Boss(1, 80, 60);
+//	draw_Boss(2, 160, 60);
+//	Switch_Init(&Switch_Test, &Switch_Test);
+//	Sound_Init();
+//	
+//	EnableInterrupts();
+//	Sound_Play(1);
+	int buff[20] = {0};
+	int counter = 0;
+	while(counter < 20){
+		int read = VL53L0X_ReadDistance();
+		for(int i = 0; i < 1000000; i ++){}
+		buff[counter++] = read;
+	}
+	int a = 3;
 }
