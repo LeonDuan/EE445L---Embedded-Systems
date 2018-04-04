@@ -42,8 +42,8 @@ uint8_t I2C_Recv(int8_t slave){
   int retryCounter = 1;
   do{
     while(I2C3_MCS_R&I2C_MCS_BUSY){};// wait for I2C ready
-    I2C3_MSA_R = slave;    // MSA[7:1] is slave address
-    I2C3_MSA_R |= 0x01;              // MSA[0] is 1 for receive
+    I2C0_MSA_R = (slave<<1)&0xFE;    // MSA[7:1] is slave address
+    I2C0_MSA_R |= 0x01;              // MSA[0] is 1 for receive
     I2C3_MCS_R = (0
                         // & ~I2C_MCS_ACK     // negative data ack (last byte)
                          | I2C_MCS_STOP     // generate stop
@@ -66,7 +66,7 @@ uint16_t I2C_Recv2(int8_t slave){
   int retryCounter = 1;
   do{
     while(I2C3_MCS_R&I2C_MCS_BUSY){};// wait for I2C ready
-    I2C3_MSA_R = slave;    // MSA[7:1] is slave address
+    I2C3_MSA_R = (slave<<1)&0xFE;    // MSA[7:1] is slave address
     I2C3_MSA_R |= 0x01;              // MSA[0] is 1 for receive
     I2C3_MCS_R = (0
                          | I2C_MCS_ACK      // positive data ack
@@ -92,7 +92,7 @@ void I2C_Recv6(int8_t slave, unsigned char *Buff){
   int retryCounter = 1;
   do{
     while(I2C3_MCS_R&I2C_MCS_BUSY){};// wait for I2C ready
-    I2C3_MSA_R = slave;    // MSA[7:1] is slave address
+    I2C3_MSA_R = (slave<<1)&0xFE;    // MSA[7:1] is slave address
     I2C3_MSA_R |= 0x01;              // MSA[0] is 1 for receive
     I2C3_MCS_R = (0
                          | I2C_MCS_ACK      // positive data ack
@@ -150,7 +150,7 @@ void I2C_Recv6(int8_t slave, unsigned char *Buff){
 // Returns 0 if successful, nonzero if error
 uint32_t I2C_Send1(int8_t slave, uint8_t data1){
   while(I2C3_MCS_R&I2C_MCS_BUSY){};// wait for I2C ready
-  I2C3_MSA_R = slave;    // MSA[7:1] is slave address
+  I2C3_MSA_R = (slave<<1)&0xFE;    // MSA[7:1] is slave address
   I2C3_MSA_R &= ~0x01;             // MSA[0] is 0 for send
   I2C3_MDR_R = data1&0xFF;         // prepare first byte
   I2C3_MCS_R = (0
@@ -172,7 +172,7 @@ uint32_t I2C_Send1(int8_t slave, uint8_t data1){
 // Returns 0 if successful, nonzero if error
 uint32_t I2C_Send2(int8_t slave, uint8_t data1, uint8_t data2){
   while(I2C3_MCS_R&I2C_MCS_BUSY){};// wait for I2C ready
-  I2C3_MSA_R = slave;    // MSA[7:1] is slave address
+  I2C3_MSA_R = (slave<<1)&0xFE;    // MSA[7:1] is slave address
   I2C3_MSA_R &= ~0x01;             // MSA[0] is 0 for send
   I2C3_MDR_R = data1&0xFF;         // prepare first byte
   I2C3_MCS_R = (0
@@ -210,7 +210,7 @@ uint32_t I2C_Send2(int8_t slave, uint8_t data1, uint8_t data2){
 // Returns 0 if successful, nonzero if error
 uint32_t I2C_Send3(int8_t slave, uint8_t data1, uint8_t data2, uint8_t data3){
   while(I2C3_MCS_R&I2C_MCS_BUSY){};// wait for I2C ready
-  I2C3_MSA_R = slave;    // MSA[7:1] is slave address
+  I2C3_MSA_R = (slave<<1)&0xFE;    // MSA[7:1] is slave address
   I2C3_MSA_R &= ~0x01;             // MSA[0] is 0 for send
   I2C3_MDR_R = data1&0xFF;         // prepare first byte
   I2C3_MCS_R = (0
@@ -261,7 +261,7 @@ uint32_t I2C_Send3(int8_t slave, uint8_t data1, uint8_t data2, uint8_t data3){
 
 uint32_t I2C_Send6(int8_t slave, unsigned char *Buff){
   while(I2C3_MCS_R&I2C_MCS_BUSY){};// wait for I2C ready
-  I2C3_MSA_R = slave;    // MSA[7:1] is slave address
+  I2C3_MSA_R = (slave<<1)&0xFE;    // MSA[7:1] is slave address
   I2C3_MSA_R &= ~0x01;             // MSA[0] is 0 for send
   I2C3_MDR_R = Buff[0]&0xFF;         // prepare first byte
   I2C3_MCS_R = (0

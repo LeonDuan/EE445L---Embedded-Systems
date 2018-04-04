@@ -133,7 +133,7 @@
           <Target>
             <UseTarget>1</UseTarget>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>0</RunToMain>
+            <RunToMain>1</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
             <RestoreWatchpoints>1</RestoreWatchpoints>
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
@@ -436,9 +436,9 @@
               <FilePath>.\Graphics.c</FilePath>
             </File>
             <File>
-              <FileName>Proximity.c</FileName>
+              <FileName>I2C.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Proximity.c</FilePath>
+              <FilePath>.\I2C.c</FilePath>
             </File>
             <File>
               <FileName>Sound.c</FileName>
@@ -459,6 +459,11 @@
               <FileName>Timer.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>Proximity.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Proximity.c</FilePath>
             </File>
           </Files>
         </Group>
