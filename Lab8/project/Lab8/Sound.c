@@ -69,7 +69,7 @@ void play_Music(void){
 		}
 		
 		note_counter = music[song_counter].period;
-		TIMER1_TAILR_R = (music+song_counter)->freq;
+		TIMER1_TAILR_R = music[song_counter].freq;
 		song_counter ++;
 	}
 	
@@ -94,8 +94,8 @@ void out_Sound(){
 }
 
 void Sound_Init(){
-	Timer0A_Init(&out_Sound,200000);
-	Timer1A_Init(&play_Music,4000000);
+	Timer0A_Init(&play_Music,200000);
+	Timer1A_Init(&out_Sound,4000000);
 	DAC_Init();
 }
 
@@ -104,7 +104,7 @@ void Sound_Play(uint16_t song){
 		case 1:
 			music = bgm.song;
 			musicLength = bgm.song_length;
-			TIMER0_TAILR_R = (80000000/bgm.tempo)*60/4;
+			TIMER0_TAILR_R = (80000000/bgm.tempo)*60/16;
 			resetFlag = 1;
 			break;
 	}
