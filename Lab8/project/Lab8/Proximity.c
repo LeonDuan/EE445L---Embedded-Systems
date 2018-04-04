@@ -1,212 +1,410 @@
-// I2C3SCL connected to PD0 and to SCL on VL53L0X
-// I2C3SDA connected to PD1 and to SDA on VL53L0X
-// SCL and SDA lines pulled to +3.3 V with 10 k resistors
 #include <stdint.h>
-#include "../inc/tm4c123gh6pm.h"
+#include "I2C.h"
 
+static unsigned char stop_variable;
+static uint32_t measurement_timing_budget_us;
 
-#define I2C_MCS_ACK             0x00000008  // Data Acknowledge Enable
-#define I2C_MCS_DATACK          0x00000008  // Acknowledge Data
-#define I2C_MCS_ADRACK          0x00000004  // Acknowledge Address
-#define I2C_MCS_STOP            0x00000004  // Generate STOP
-#define I2C_MCS_START           0x00000002  // Generate START
-#define I2C_MCS_ERROR           0x00000002  // Error
-#define I2C_MCS_RUN             0x00000001  // I2C Master Enable
-#define I2C_MCS_BUSY            0x00000001  // I2C Busy
-#define I2C_MCR_MFE             0x00000010  // I2C Master Function Enable
+#define calcMacroPeriod(vcsel_period_pclks) ((((uint32_t)2304 * (vcsel_period_pclks) * 1655) + 500) / 1000)
+// Encode VCSEL pulse period register value from period in PCLKs
+// based on VL53L0X_encode_vcsel_period()
+#define encodeVcselPeriod(period_pclks) (((period_pclks) >> 1) - 1)
 
-#define MAXRETRIES              10           // number of receive attempts before giving up
-void Proximity_Init(void){
-  SYSCTL_RCGCI2C_R |= 0x0008;           // activate I2C3
-  SYSCTL_RCGCGPIO_R |= 0x0008;          // activate port D
-  while((SYSCTL_PRGPIO_R&0x0008) == 0){};// ready?
+#define SEQUENCE_ENABLE_FINAL_RANGE 0x80
+#define SEQUENCE_ENABLE_PRE_RANGE   0x40
+#define SEQUENCE_ENABLE_TCC         0x10
+#define SEQUENCE_ENABLE_DSS         0x08
+#define SEQUENCE_ENABLE_MSRC        0x04
 
-  GPIO_PORTD_AFSEL_R |= 0x03;           // 3) enable alt funct on PD0,1
-  GPIO_PORTD_ODR_R |= 0x02;             // 4) enable open drain on PB3 only
-  GPIO_PORTD_DEN_R |= 0x03;             // 5) enable digital I/O on PD0,1
-                                        // 6) configure PD0,1 as I2C
-  GPIO_PORTD_PCTL_R = (GPIO_PORTD_PCTL_R&0xFFFFFF00)+0x00000033;
-  GPIO_PORTD_AMSEL_R &= ~0x03;          // 7) disable analog functionality on PD0,1
-  I2C3_MCR_R = I2C_MCR_MFE;      // 9) master function enable
-  I2C3_MTPR_R = 24;              // 8) configure for 100 kbps clock
-  // 20*(TPR+1)*20ns = 10us, with TPR=24
+typedef enum vcselperiodtype { VcselPeriodPreRange, VcselPeriodFinalRange } vcselPeriodType;
+
+typedef struct tagSequenceStepTimeouts
+    {
+      uint16_t pre_range_vcsel_period_pclks, final_range_vcsel_period_pclks;
+
+      uint16_t msrc_dss_tcc_mclks, pre_range_mclks, final_range_mclks;
+      uint32_t msrc_dss_tcc_us,    pre_range_us,    final_range_us;
+    } SequenceStepTimeouts;
+
+#define REG_IDENTIFICATION_MODEL_ID					0xc0
+#define REG_IDENTIFICATION_REVISION_ID				0xc2
+#define REG_SYSRANGE_START							0x00
+
+#define REG_RESULT_INTERRUPT_STATUS 				0x13
+#define RESULT_RANGE_STATUS      					0x14
+#define ALGO_PHASECAL_LIM                       	0x30
+#define ALGO_PHASECAL_CONFIG_TIMEOUT            	0x30
+
+#define GLOBAL_CONFIG_VCSEL_WIDTH               	0x32
+#define FINAL_RANGE_CONFIG_VALID_PHASE_LOW      	0x47
+#define FINAL_RANGE_CONFIG_VALID_PHASE_HIGH     	0x48
+
+#define PRE_RANGE_CONFIG_VCSEL_PERIOD           	0x50
+#define PRE_RANGE_CONFIG_TIMEOUT_MACROP_HI      	0x51
+#define PRE_RANGE_CONFIG_VALID_PHASE_LOW        	0x56
+#define PRE_RANGE_CONFIG_VALID_PHASE_HIGH       	0x57
+
+#define REG_MSRC_CONFIG_CONTROL                 	0x60
+#define FINAL_RANGE_CONFIG_VCSEL_PERIOD         	0x70
+#define FINAL_RANGE_CONFIG_TIMEOUT_MACROP_HI    	0x71
+#define MSRC_CONFIG_TIMEOUT_MACROP              	0x46
+#define FINAL_RANGE_CONFIG_MIN_COUNT_RATE_RTN_LIMIT 0x44
+#define SYSRANGE_START                          	0x00
+#define SYSTEM_SEQUENCE_CONFIG                  	0x01
+#define SYSTEM_INTERRUPT_CONFIG_GPIO            	0x0A
+#define RESULT_INTERRUPT_STATUS                 	0x13
+#define VHV_CONFIG_PAD_SCL_SDA__EXTSUP_HV       	0x89
+#define GLOBAL_CONFIG_SPAD_ENABLES_REF_0        	0xB0
+#define GPIO_HV_MUX_ACTIVE_HIGH                 	0x84
+#define SYSTEM_INTERRUPT_CLEAR                  	0x0B
+
+// Register init lists consist of the count followed by register/value pairs
+//
+unsigned char ucI2CMode[] = {4, 0x88,0x00, 0x80,0x01, 0xff,0x01, 0x00,0x00};
+unsigned char ucI2CMode2[] = {3, 0x00,0x01, 0xff,0x00, 0x80,0x00};
+unsigned char ucSPAD0[] = {4, 0x80,0x01, 0xff,0x01, 0x00,0x00, 0xff,0x06};
+unsigned char ucSPAD1[] = {5, 0xff,0x07, 0x81,0x01, 0x80,0x01, 0x94,0x6b, 0x83,0x00};
+unsigned char ucSPAD2[] = {4, 0xff,0x01, 0x00,0x01, 0xff,0x00, 0x80,0x00};
+unsigned char ucSPAD[] = {5, 0xff,0x01, 0x4f,0x00, 0x4e,0x2c, 0xff,0x00, 0xb6,0xb4};
+unsigned char ucDefTuning[] = {80, 0xff,0x01, 0x00,0x00, 0xff,0x00, 0x09,0x00,
+0x10,0x00, 0x11,0x00, 0x24,0x01, 0x25,0xff, 0x75,0x00, 0xff,0x01, 0x4e,0x2c,
+0x48,0x00, 0x30,0x20, 0xff,0x00, 0x30,0x09, 0x54,0x00, 0x31,0x04, 0x32,0x03,
+0x40,0x83, 0x46,0x25, 0x60,0x00, 0x27,0x00, 0x50,0x06, 0x51,0x00, 0x52,0x96,
+0x56,0x08, 0x57,0x30, 0x61,0x00, 0x62,0x00, 0x64,0x00, 0x65,0x00, 0x66,0xa0,
+0xff,0x01, 0x22,0x32, 0x47,0x14, 0x49,0xff, 0x4a,0x00, 0xff,0x00, 0x7a,0x0a,
+0x7b,0x00, 0x78,0x21, 0xff,0x01, 0x23,0x34, 0x42,0x00, 0x44,0xff, 0x45,0x26,
+0x46,0x05, 0x40,0x40, 0x0e,0x06, 0x20,0x1a, 0x43,0x40, 0xff,0x00, 0x34,0x03,
+0x35,0x44, 0xff,0x01, 0x31,0x04, 0x4b,0x09, 0x4c,0x05, 0x4d,0x04, 0xff,0x00,
+0x44,0x00, 0x45,0x20, 0x47,0x08, 0x48,0x28, 0x67,0x00, 0x70,0x04, 0x71,0x01,
+0x72,0xfe, 0x76,0x00, 0x77,0x00, 0xff,0x01, 0x0d,0x01, 0xff,0x00, 0x80,0x01,
+0x01,0xf8, 0xff,0x01, 0x8e,0x01, 0x00,0x01, 0xff,0x00, 0x80,0x00};
+
+// Decode sequence step timeout in MCLKs from register value
+// based on VL53L0X_decode_timeout()
+// Note: the original function returned a uint32_t, but the return value is
+// always stored in a uint16_t.
+static uint16_t decodeTimeout(uint16_t reg_val)
+{
+  // format: "(LSByte * 2^MSByte) + 1"
+  return (uint16_t)((reg_val & 0x00FF) <<
+         (uint16_t)((reg_val & 0xFF00) >> 8)) + 1;
 }
 
-// receives one byte from specified slave
-// Note for HMC6352 compass only:
-// Used with 'r' and 'g' commands
-// Note for TMP102 thermometer only:
-// Used to read the top byte of the contents of the pointer register
-//  This will work but is probably not what you want to do.
-uint8_t I2C_Recv(int8_t slave){
-  int retryCounter = 1;
-  do{
-    while(I2C3_MCS_R&I2C_MCS_BUSY){};// wait for I2C ready
-    I2C3_MSA_R = (slave<<1)&0xFE;    // MSA[7:1] is slave address
-    I2C3_MSA_R |= 0x01;              // MSA[0] is 1 for receive
-    I2C3_MCS_R = (0
-                        // & ~I2C_MCS_ACK     // negative data ack (last byte)
-                         | I2C_MCS_STOP     // generate stop
-                         | I2C_MCS_START    // generate start/restart
-                         | I2C_MCS_RUN);    // master enable
-    while(I2C3_MCS_R&I2C_MCS_BUSY){};// wait for transmission done
-    retryCounter = retryCounter + 1;        // increment retry counter
-  }                                         // repeat if error
-  while(((I2C3_MCS_R&(I2C_MCS_ADRACK|I2C_MCS_ERROR)) != 0) && (retryCounter <= MAXRETRIES));
-  return (I2C3_MDR_R&0xFF);          // usually returns 0xFF on error
-}
-// receives two bytes from specified slave
-// Note for HMC6352 compass only:
-// Used with 'A' commands
-// Note for TMP102 thermometer only:
-// Used to read the contents of the pointer register
-uint16_t I2C_Recv2(int8_t slave){
-  uint8_t data1,data2;
-  int retryCounter = 1;
-  do{
-    while(I2C3_MCS_R&I2C_MCS_BUSY){};// wait for I2C ready
-    I2C3_MSA_R = (slave<<1)&0xFE;    // MSA[7:1] is slave address
-    I2C3_MSA_R |= 0x01;              // MSA[0] is 1 for receive
-    I2C3_MCS_R = (0
-                         | I2C_MCS_ACK      // positive data ack
-                       //  & ~I2C_MCS_STOP    // no stop
-                         | I2C_MCS_START    // generate start/restart
-                         | I2C_MCS_RUN);    // master enable
-    while(I2C3_MCS_R&I2C_MCS_BUSY){};// wait for transmission done
-    data1 = (I2C3_MDR_R&0xFF);       // MSB data sent first
-    I2C3_MCS_R = (0
-                       //  & ~I2C_MCS_ACK     // negative data ack (last byte)
-                         | I2C_MCS_STOP     // generate stop
-                       //  & ~I2C_MCS_START   // no start/restart
-                         | I2C_MCS_RUN);    // master enable
-    while(I2C3_MCS_R&I2C_MCS_BUSY){};// wait for transmission done
-    data2 = (I2C3_MDR_R&0xFF);       // LSB data sent last
-    retryCounter = retryCounter + 1;        // increment retry counter
-  }                                         // repeat if error
-  while(((I2C3_MCS_R&(I2C_MCS_ADRACK|I2C_MCS_ERROR)) != 0) && (retryCounter <= MAXRETRIES));
-  return (data1<<8)+data2;                  // usually returns 0xFFFF on error
+static uint32_t timeoutMclksToMicroseconds(uint16_t timeout_period_mclks, uint8_t vcsel_period_pclks)
+{
+  uint32_t macro_period_ns = calcMacroPeriod(vcsel_period_pclks);
+
+  return ((timeout_period_mclks * macro_period_ns) + (macro_period_ns / 2)) / 1000;
 }
 
-// sends one byte to specified slave
-// Note for HMC6352 compass only:
-// Used with 'S', 'W', 'O', 'C', 'E', 'L', and 'A' commands
-//  For 'A' commands, I2C_Recv2() should also be called
-// Note for TMP102 thermometer only:
-// Used to change the pointer register
-// Returns 0 if successful, nonzero if error
-uint32_t I2C_Send1(int8_t slave, uint8_t data1){
-  while(I2C3_MCS_R&I2C_MCS_BUSY){};// wait for I2C ready
-  I2C3_MSA_R = (slave<<1)&0xFE;    // MSA[7:1] is slave address
-  I2C3_MSA_R &= ~0x01;             // MSA[0] is 0 for send
-  I2C3_MDR_R = data1&0xFF;         // prepare first byte
-  I2C3_MCS_R = (0
-                    //   & ~I2C_MCS_ACK     // no data ack (no data on send)
-                       | I2C_MCS_STOP     // generate stop
-                       | I2C_MCS_START    // generate start/restart
-                       | I2C_MCS_RUN);    // master enable
-  while(I2C3_MCS_R&I2C_MCS_BUSY){};// wait for transmission done
-                                          // return error bits
-  return (I2C3_MCS_R&(I2C_MCS_DATACK|I2C_MCS_ADRACK|I2C_MCS_ERROR));
+// Convert sequence step timeout from microseconds to MCLKs with given VCSEL period in PCLKs
+// based on VL53L0X_calc_timeout_mclks()
+static uint32_t timeoutMicrosecondsToMclks(uint32_t timeout_period_us, uint8_t vcsel_period_pclks)
+{
+  uint32_t macro_period_ns = calcMacroPeriod(vcsel_period_pclks);
+
+  return (((timeout_period_us * 1000) + (macro_period_ns / 2)) / macro_period_ns);
 }
-// sends two bytes to specified slave
-// Note for HMC6352 compass only:
-// Used with 'r' and 'g' commands
-//  For 'r' and 'g' commands, I2C_Recv() should also be called
-// Note for TMP102 thermometer only:
-// Used to change the top byte of the contents of the pointer register
-//  This will work but is probably not what you want to do.
-// Returns 0 if successful, nonzero if error
-uint32_t I2C_Send2(int8_t slave, uint8_t data1, uint8_t data2){
-  while(I2C3_MCS_R&I2C_MCS_BUSY){};// wait for I2C ready
-  I2C3_MSA_R = (slave<<1)&0xFE;    // MSA[7:1] is slave address
-  I2C3_MSA_R &= ~0x01;             // MSA[0] is 0 for send
-  I2C3_MDR_R = data1&0xFF;         // prepare first byte
-  I2C3_MCS_R = (0
-                     //  & ~I2C_MCS_ACK     // no data ack (no data on send)
-                    //   & ~I2C_MCS_STOP    // no stop
-                       | I2C_MCS_START    // generate start/restart
-                       | I2C_MCS_RUN);    // master enable
-  while(I2C3_MCS_R&I2C_MCS_BUSY){};// wait for transmission done
-                                          // check error bits
-  if((I2C3_MCS_R&(I2C_MCS_DATACK|I2C_MCS_ADRACK|I2C_MCS_ERROR)) != 0){
-    I2C3_MCS_R = (0                // send stop if nonzero
-                     //  & ~I2C_MCS_ACK     // no data ack (no data on send)
-                       | I2C_MCS_STOP     // stop
-                     //  & ~I2C_MCS_START   // no start/restart
-                     //  & ~I2C_MCS_RUN    // master disable
-                        );   
-                                          // return error bits if nonzero
-    return (I2C3_MCS_R&(I2C_MCS_DATACK|I2C_MCS_ADRACK|I2C_MCS_ERROR));
+
+static uint16_t encodeTimeout(uint16_t timeout_mclks){
+  // format: "(LSByte * 2^MSByte) + 1"
+
+  uint32_t ls_byte = 0;
+  uint16_t ms_byte = 0;
+
+  if (timeout_mclks > 0){
+    ls_byte = timeout_mclks - 1;
+
+    while ((ls_byte & 0xFFFFFF00) > 0){
+      ls_byte >>= 1;
+      ms_byte++;
+    }
+
+    return (ms_byte << 8) | (ls_byte & 0xFF);
   }
-  I2C3_MDR_R = data2&0xFF;         // prepare second byte
-  I2C3_MCS_R = (0
-                      // & ~I2C_MCS_ACK     // no data ack (no data on send)
-                       | I2C_MCS_STOP     // generate stop
-                      // & ~I2C_MCS_START   // no start/restart
-                       | I2C_MCS_RUN);    // master enable
-  while(I2C3_MCS_R&I2C_MCS_BUSY){};// wait for transmission done
-                                          // return error bits
-  return (I2C3_MCS_R&(I2C_MCS_DATACK|I2C_MCS_ADRACK|I2C_MCS_ERROR));
-}
-// sends three bytes to specified slave
-// Note for HMC6352 compass only:
-// Used with 'w' and 'G' commands
-// Note for TMP102 thermometer only:
-// Used to change the contents of the pointer register
-// Returns 0 if successful, nonzero if error
-uint32_t I2C_Send3(int8_t slave, uint8_t data1, uint8_t data2, uint8_t data3){
-  while(I2C3_MCS_R&I2C_MCS_BUSY){};// wait for I2C ready
-  I2C3_MSA_R = (slave<<1)&0xFE;    // MSA[7:1] is slave address
-  I2C3_MSA_R &= ~0x01;             // MSA[0] is 0 for send
-  I2C3_MDR_R = data1&0xFF;         // prepare first byte
-  I2C3_MCS_R = (0
-                     //  & ~I2C_MCS_ACK     // no data ack (no data on send)
-                     //  & ~I2C_MCS_STOP    // no stop
-                       | I2C_MCS_START    // generate start/restart
-                       | I2C_MCS_RUN);    // master enable
-  while(I2C3_MCS_R&I2C_MCS_BUSY){};// wait for transmission done
-                                          // check error bits
-  if((I2C3_MCS_R&(I2C_MCS_DATACK|I2C_MCS_ADRACK|I2C_MCS_ERROR)) != 0){
-    I2C3_MCS_R = (0                // send stop if nonzero
-                     //  & ~I2C_MCS_ACK     // no data ack (no data on send)
-                       | I2C_MCS_STOP     // stop
-                     //  & ~I2C_MCS_START   // no start/restart
-                     //  & ~I2C_MCS_RUN   // master disable
-                       );   
-                                          // return error bits if nonzero
-    return (I2C3_MCS_R&(I2C_MCS_DATACK|I2C_MCS_ADRACK|I2C_MCS_ERROR));
-  }
-  I2C3_MDR_R = data2&0xFF;         // prepare second byte
-  I2C3_MCS_R = (0
-                     //  & ~I2C_MCS_ACK     // no data ack (no data on send)
-                     //  & ~I2C_MCS_STOP    // no stop
-                     //  & ~I2C_MCS_START   // no start/restart
-                       | I2C_MCS_RUN);    // master enable
-  while(I2C3_MCS_R&I2C_MCS_BUSY){};// wait for transmission done
-                                          // check error bits
-  if((I2C3_MCS_R&(I2C_MCS_DATACK|I2C_MCS_ADRACK|I2C_MCS_ERROR)) != 0){
-    I2C3_MCS_R = (0                // send stop if nonzero
-                     //  & ~I2C_MCS_ACK     // no data ack (no data on send)
-                       | I2C_MCS_STOP     // stop
-                     //  & ~I2C_MCS_START   // no start/restart
-                     //  & ~I2C_MCS_RUN   // master disable
-                        );
-                                          // return error bits if nonzero
-    return (I2C3_MCS_R&(I2C_MCS_DATACK|I2C_MCS_ADRACK|I2C_MCS_ERROR));
-  }
-  I2C3_MDR_R = data3&0xFF;         // prepare third byte
-  I2C3_MCS_R = (0
-                    //   & ~I2C_MCS_ACK     // no data ack (no data on send)
-                       | I2C_MCS_STOP     // generate stop
-                    //   & ~I2C_MCS_START   // no start/restart
-                       | I2C_MCS_RUN);    // master enable
-  while(I2C3_MCS_R&I2C_MCS_BUSY){};// wait for transmission done
-                                          // return error bits
-  return (I2C3_MCS_R&(I2C_MCS_DATACK|I2C_MCS_ADRACK|I2C_MCS_ERROR));
+  else return 0;
 }
 
-uint16_t Proximity_Read(){
-	uint16_t distance;
-	distance = I2C_Recv2(0x29);
-	return distance;
+static void getSequenceStepTimeouts(uint8_t enables, SequenceStepTimeouts * timeouts){
+  timeouts->pre_range_vcsel_period_pclks = ((I2C_Recv(PRE_RANGE_CONFIG_VCSEL_PERIOD) +1) << 1);
+
+  timeouts->msrc_dss_tcc_mclks = I2C_Recv(MSRC_CONFIG_TIMEOUT_MACROP) + 1;
+  timeouts->msrc_dss_tcc_us =
+    timeoutMclksToMicroseconds(timeouts->msrc_dss_tcc_mclks,
+                               timeouts->pre_range_vcsel_period_pclks);
+
+  timeouts->pre_range_mclks =
+    decodeTimeout(I2C_Recv2(PRE_RANGE_CONFIG_TIMEOUT_MACROP_HI));
+  timeouts->pre_range_us =
+    timeoutMclksToMicroseconds(timeouts->pre_range_mclks,
+                               timeouts->pre_range_vcsel_period_pclks);
+
+  timeouts->final_range_vcsel_period_pclks = ((I2C_Recv(FINAL_RANGE_CONFIG_VCSEL_PERIOD) +1) << 1);
+
+  timeouts->final_range_mclks =
+    decodeTimeout(I2C_Recv2(FINAL_RANGE_CONFIG_TIMEOUT_MACROP_HI));
+
+  if (enables & SEQUENCE_ENABLE_PRE_RANGE)
+  {
+    timeouts->final_range_mclks -= timeouts->pre_range_mclks;
+  }
+
+  timeouts->final_range_us =
+    timeoutMclksToMicroseconds(timeouts->final_range_mclks,
+                               timeouts->final_range_vcsel_period_pclks);
+}
+
+// Set the measurement timing budget in microseconds, which is the time allowed
+// for one measurement; the ST API and this library take care of splitting the
+// timing budget among the sub-steps in the ranging sequence. A longer timing
+// budget allows for more accurate measurements. Increasing the budget by a
+// factor of N decreases the range measurement standard deviation by a factor of
+// sqrt(N). Defaults to about 33 milliseconds; the minimum is 20 ms.
+// based on VL53L0X_set_measurement_timing_budget_micro_seconds()
+static int setMeasurementTimingBudget(uint32_t budget_us){
+uint32_t used_budget_us;
+uint32_t final_range_timeout_us;
+uint16_t final_range_timeout_mclks;
+
+uint8_t enables;
+SequenceStepTimeouts timeouts;
+
+uint16_t const StartOverhead      = 1320; // note that this is different than the value in get_
+uint16_t const EndOverhead        = 960;
+uint16_t const MsrcOverhead       = 660;
+uint16_t const TccOverhead        = 590;
+uint16_t const DssOverhead        = 690;
+uint16_t const PreRangeOverhead   = 660;
+uint16_t const FinalRangeOverhead = 550;
+
+uint32_t const MinTimingBudget = 20000;
+
+if (budget_us < MinTimingBudget) return 0;
+
+used_budget_us = StartOverhead + EndOverhead;
+
+enables = I2C_Recv(SYSTEM_SEQUENCE_CONFIG);
+getSequenceStepTimeouts(enables, &timeouts);
+
+if (enables & SEQUENCE_ENABLE_TCC) used_budget_us += (timeouts.msrc_dss_tcc_us + TccOverhead);
+
+if (enables & SEQUENCE_ENABLE_DSS) used_budget_us += 2 * (timeouts.msrc_dss_tcc_us + DssOverhead);
+  
+else if (enables & SEQUENCE_ENABLE_MSRC) used_budget_us += (timeouts.msrc_dss_tcc_us + MsrcOverhead);
+
+if (enables & SEQUENCE_ENABLE_PRE_RANGE)used_budget_us += (timeouts.pre_range_us + PreRangeOverhead);
+
+if (enables & SEQUENCE_ENABLE_FINAL_RANGE){
+    used_budget_us += FinalRangeOverhead;
+
+    // "Note that the final range timeout is determined by the timing
+    // budget and the sum of all other timeouts within the sequence.
+    // If there is no room for the final range timeout, then an error
+    // will be set. Otherwise the remaining time will be applied to
+    // the final range."
+
+    if (used_budget_us > budget_us) return 0;	// "Requested timeout too big."
+
+    final_range_timeout_us = budget_us - used_budget_us;
+
+    // set_sequence_step_timeout() begin
+    // (SequenceStepId == VL53L0X_SEQUENCESTEP_FINAL_RANGE)
+
+    // "For the final range timeout, the pre-range timeout
+    //  must be added. To do this both final and pre-range
+    //  timeouts must be expressed in macro periods MClks
+    //  because they have different vcsel periods."
+
+    final_range_timeout_mclks = timeoutMicrosecondsToMclks(final_range_timeout_us, timeouts.final_range_vcsel_period_pclks);
+
+    if (enables & SEQUENCE_ENABLE_PRE_RANGE) final_range_timeout_mclks += timeouts.pre_range_mclks;
+
+    uint16_t tempdata = encodeTimeout(final_range_timeout_mclks);
+    unsigned char tempdata1 = (tempdata&0xFF00)>>8;
+    unsigned char tempdata2 = tempdata&0xFF;
+
+    I2C_Send2(FINAL_RANGE_CONFIG_TIMEOUT_MACROP_HI,tempdata1,tempdata2);
+
+    // set_sequence_step_timeout() end
+
+    measurement_timing_budget_us = budget_us; // store for internal reuse
+  }
+  return 1;
+}
+
+static uint32_t getMeasurementTimingBudget(void){
+  uint8_t enables;
+  SequenceStepTimeouts timeouts;
+
+  uint16_t const StartOverhead     = 1910; // note that this is different than the value in set_
+  uint16_t const EndOverhead        = 960;
+  uint16_t const MsrcOverhead       = 660;
+  uint16_t const TccOverhead        = 590;
+  uint16_t const DssOverhead        = 690;
+  uint16_t const PreRangeOverhead   = 660;
+  uint16_t const FinalRangeOverhead = 550;
+
+  // "Start and end overhead times always present"
+  uint32_t budget_us = StartOverhead + EndOverhead;
+
+  enables = I2C_Recv(SYSTEM_SEQUENCE_CONFIG);
+  getSequenceStepTimeouts(enables, &timeouts);
+
+  if (enables & SEQUENCE_ENABLE_TCC) budget_us += (timeouts.msrc_dss_tcc_us + TccOverhead);
+
+  if (enables & SEQUENCE_ENABLE_DSS) budget_us += 2 * (timeouts.msrc_dss_tcc_us + DssOverhead);
+  
+  else if (enables & SEQUENCE_ENABLE_MSRC) budget_us += (timeouts.msrc_dss_tcc_us + MsrcOverhead);
+
+  if (enables & SEQUENCE_ENABLE_PRE_RANGE) budget_us += (timeouts.pre_range_us + PreRangeOverhead);
+
+  if (enables & SEQUENCE_ENABLE_FINAL_RANGE) budget_us += (timeouts.final_range_us + FinalRangeOverhead);
+
+  measurement_timing_budget_us = budget_us; // store for internal reuse
+  return budget_us;
+}
+
+static int getSpadInfo(unsigned char *pCount, unsigned char *pTypeIsAperture)
+{
+int iTimeout;
+unsigned char ucTemp;
+#define MAX_TIMEOUT 50
+
+  I2C_SendList(ucSPAD0);
+  I2C_Send1(0x83, I2C_Recv(0x83) | 0x04);
+  I2C_SendList(ucSPAD1);
+  iTimeout = 0;
+  while(iTimeout < MAX_TIMEOUT){
+    if (I2C_Recv(0x83) != 0x00) break;
+    iTimeout++;
+		int count_down = 400000;
+		while(count_down > 0) count_down--;
+  }
+  if (iTimeout == MAX_TIMEOUT) return 0;
+  I2C_Send1(0x83,0x01);
+  ucTemp = I2C_Recv(0x92);
+  *pCount = (ucTemp & 0x7f);
+  *pTypeIsAperture = (ucTemp & 0x80);
+  I2C_Send1(0x81,0x00);
+  I2C_Send1(0xff,0x06);
+  I2C_Send1(0x83, I2C_Recv(0x83) & ~0x04);
+  I2C_SendList(ucSPAD2);
+  
+  return 1;
+}
+
+static int performSingleRefCalibration(uint8_t vhv_init_byte)
+{
+int iTimeout;
+  I2C_Send1(SYSRANGE_START, 0x01 | vhv_init_byte); // VL53L0X_REG_SYSRANGE_MODE_START_STOP
+
+  iTimeout = 0;
+  while ((I2C_Recv(RESULT_INTERRUPT_STATUS) & 0x07) == 0)
+  {
+    iTimeout++;
+    int count_down = 400000;
+		while(count_down > 0) count_down--;
+    if (iTimeout > 100) { return 0; }
+  }
+
+  I2C_Send1(SYSTEM_INTERRUPT_CLEAR, 0x01);
+
+  I2C_Send1(SYSRANGE_START, 0x00);
+
+  return 1;
+}
+
+void VL53L0X_Init(void){
+	unsigned char spad_count=0, spad_type_is_aperture=0, ref_spad_map[6];
+	unsigned char ucFirstSPAD, ucSPADsEnabled;
+	int i;
+
+	// set 2.8V mode
+	I2C_Send1(VHV_CONFIG_PAD_SCL_SDA__EXTSUP_HV,I2C_Recv(VHV_CONFIG_PAD_SCL_SDA__EXTSUP_HV)|0x01);
+	// set I2C standar mode	
+	I2C_SendList(ucI2CMode);
+	stop_variable = I2C_Recv(0x91);
+	I2C_SendList(ucI2CMode2);
+	// disable SIGNAL_RATE_MSRC (bit 1) and SIGNAL_RATE_PRE_RANGE (bit 4) limit checks
+	I2C_Send1(REG_MSRC_CONFIG_CONTROL,I2C_Recv(REG_MSRC_CONFIG_CONTROL)|0x12);
+	// Q9.7 fixed point format (9 integer bits, 7 fractional bits)
+  I2C_Send2(FINAL_RANGE_CONFIG_MIN_COUNT_RATE_RTN_LIMIT, 0x00, 0x20); // 0.25
+  I2C_Send1(SYSTEM_SEQUENCE_CONFIG, 0xFF);
+  getSpadInfo(&spad_count,&spad_type_is_aperture);
+  I2C_Recv6(GLOBAL_CONFIG_SPAD_ENABLES_REF_0, ref_spad_map);
+  I2C_SendList(ucSPAD);
+  ucFirstSPAD = (spad_type_is_aperture) ? 12:0;
+  ucSPADsEnabled = 0;
+  for (i=0; i<48; i++){
+   	if (i < ucFirstSPAD || ucSPADsEnabled == spad_count){
+   		ref_spad_map[i>>3] &= ~(1<<(i & 7));
+   	}
+   	else if (ref_spad_map[i>>3] & (1<< (i & 7))){
+     		ucSPADsEnabled++;
+   	}
+  }
+  I2C_Send6(GLOBAL_CONFIG_SPAD_ENABLES_REF_0, ref_spad_map);
+  // load default tuning settings
+  I2C_SendList(ucDefTuning);
+  // set interrupt configuration to "new sample ready"
+  I2C_Send1(SYSTEM_INTERRUPT_CONFIG_GPIO, 0x04);
+  I2C_Send1(GPIO_HV_MUX_ACTIVE_HIGH, I2C_Recv(GPIO_HV_MUX_ACTIVE_HIGH) & ~0x10); // active low
+  I2C_Send1(SYSTEM_INTERRUPT_CLEAR, 0x01);
+  measurement_timing_budget_us = getMeasurementTimingBudget();
+  I2C_Send1(SYSTEM_SEQUENCE_CONFIG, 0xE8);
+  setMeasurementTimingBudget(measurement_timing_budget_us);
+  I2C_Send1(SYSTEM_SEQUENCE_CONFIG, 0x01);
+  performSingleRefCalibration(0x40);
+  I2C_Send1(SYSTEM_SEQUENCE_CONFIG, 0x02);
+  performSingleRefCalibration(0x00);
+  I2C_Send1(SYSTEM_SEQUENCE_CONFIG, 0xE8);
+}
+
+uint16_t VL53L0X_readRangeContinuousMillimeters(void){
+int iTimeout = 0;
+uint16_t range;
+
+  while ((I2C_Recv(RESULT_INTERRUPT_STATUS) & 0x07) == 0)
+  {
+    iTimeout++;
+    int count_down = 400000;
+		while(count_down > 0) count_down--;
+    if (iTimeout > 50)
+    {
+      return -1;
+    }
+  }
+
+  // assumptions: Linearity Corrective Gain is 1000 (default);
+  // fractional ranging is not enabled
+  range = I2C_Recv2(RESULT_RANGE_STATUS + 10);
+
+  I2C_Send1(SYSTEM_INTERRUPT_CLEAR, 0x01);
+
+  return range;
+}
+
+int VL53L0X_ReadDistance(void){
+int iTimeout;
+
+  I2C_Send1(0x80, 0x01);
+  I2C_Send1(0xFF, 0x01);
+  I2C_Send1(0x00, 0x00);
+  I2C_Send1(0x91, stop_variable);
+  I2C_Send1(0x00, 0x01);
+  I2C_Send1(0xFF, 0x00);
+  I2C_Send1(0x80, 0x00);
+
+  I2C_Send1(SYSRANGE_START, 0x01);
+
+  // "Wait until start bit has been cleared"
+  iTimeout = 0;
+  while (I2C_Recv(SYSRANGE_START) & 0x01){
+    iTimeout++;
+    int count_down = 400000;
+		while(count_down > 0) count_down--;
+    if (iTimeout > 50) return -1;
+  }
+
+  return VL53L0X_readRangeContinuousMillimeters();
+
 }

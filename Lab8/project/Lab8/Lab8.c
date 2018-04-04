@@ -7,6 +7,7 @@
 #include "Proximity.h"
 #include "Switch.h"
 #include "Graphics.h"
+#include "I2C.h"
 
 void EnableInterrupts(void);  // Enable interrupts
 void WaitForInterrupt(void);  // low power mode
@@ -45,7 +46,7 @@ int main(void) {
 	PortF_Init();								// heartbeat
   Timer0A_Init(&Graphics_Test, 40000000);
 	Init_Graphics();
-  Proximity_Init();
+  I2C_Init();
 	draw_Main_Ship(20, 20);
 	draw_Enemy_Ship(1, 80, 50);
 	draw_Enemy_Ship(2, 50, 80);

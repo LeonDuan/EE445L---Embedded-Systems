@@ -1,3 +1,3 @@
-void Proximity_Init(void);
-uint32_t Proximity_Read(void);
-uint32_t I2C_Send1(int8_t, uint8_t);
+void VL53L0X_Init(void);
+uint16_t VL53L0X_readRangeContinuousMillimeters(void);
+int VL53L0X_ReadDistance(void);
