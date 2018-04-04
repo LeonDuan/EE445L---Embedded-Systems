@@ -263,8 +263,7 @@ static uint32_t getMeasurementTimingBudget(void){
   return budget_us;
 }
 
-static int getSpadInfo(unsigned char *pCount, unsigned char *pTypeIsAperture)
-{
+static int getSpadInfo(unsigned char *pCount, unsigned char *pTypeIsAperture){
 int iTimeout;
 unsigned char ucTemp;
 #define MAX_TIMEOUT 50
@@ -276,8 +275,6 @@ unsigned char ucTemp;
   while(iTimeout < MAX_TIMEOUT){
     if (I2C_Recv(0x83) != 0x00) break;
     iTimeout++;
-		int count_down = 400000;
-		while(count_down > 0) count_down--;
   }
   if (iTimeout == MAX_TIMEOUT) return 0;
   I2C_Send1(0x83,0x01);
@@ -292,18 +289,14 @@ unsigned char ucTemp;
   return 1;
 }
 
-static int performSingleRefCalibration(uint8_t vhv_init_byte)
-{
+static int performSingleRefCalibration(uint8_t vhv_init_byte){
 int iTimeout;
   I2C_Send1(SYSRANGE_START, 0x01 | vhv_init_byte); // VL53L0X_REG_SYSRANGE_MODE_START_STOP
 
   iTimeout = 0;
-  while ((I2C_Recv(RESULT_INTERRUPT_STATUS) & 0x07) == 0)
-  {
+  while ((I2C_Recv(RESULT_INTERRUPT_STATUS) & 0x07) == 0){
     iTimeout++;
-    int count_down = 400000;
-		while(count_down > 0) count_down--;
-    if (iTimeout > 100) { return 0; }
+    if (iTimeout > 100) return 0;
   }
 
   I2C_Send1(SYSTEM_INTERRUPT_CLEAR, 0x01);
@@ -366,8 +359,6 @@ uint16_t range;
   while ((I2C_Recv(RESULT_INTERRUPT_STATUS) & 0x07) == 0)
   {
     iTimeout++;
-    int count_down = 400000;
-		while(count_down > 0) count_down--;
     if (iTimeout > 50)
     {
       return -1;
@@ -400,8 +391,6 @@ int iTimeout;
   iTimeout = 0;
   while (I2C_Recv(SYSRANGE_START) & 0x01){
     iTimeout++;
-    int count_down = 400000;
-		while(count_down > 0) count_down--;
     if (iTimeout > 50) return -1;
   }
 
