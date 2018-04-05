@@ -23,7 +23,7 @@
  */
 #include <stdint.h>
 #include "../inc/tm4c123gh6pm.h"
-#include "UART.h"
+#include "FIFO.h"
 
 #define NVIC_EN0_INT17          0x00020000  // Interrupt 17 enable
 
@@ -263,6 +263,5 @@ volatile uint32_t ADCvalue;
 void ADC0Seq3_Handler(void){
   ADC0_ISC_R = 0x08;          // acknowledge ADC sequence 3 completion
   ADCvalue = ADC0_SSFIFO3_R;  // 12-bit result
-	UART_OutString("\nADC Value: ");
-	UART_OutUDec(ADCvalue);
+	TxFifo_Put(ADCvalue);
 }

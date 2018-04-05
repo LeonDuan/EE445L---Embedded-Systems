@@ -7,36 +7,36 @@
 
   <Targets>
     <Target>
-      <TargetName>Target 1</TargetName>
+      <TargetName>ADCT0ATrigger</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
         <TargetCommonOption>
-          <Device>TM4C1230H6PM</Device>
+          <Device>LM4F120H5QR</Device>
           <Vendor>Texas Instruments</Vendor>
-          <Cpu>IRAM(0x20000000-0x20007FFF) IROM(0-0x3FFFF) CLOCK(16000000) CPUTYPE("Cortex-M4") FPU2</Cpu>
+          <Cpu>IRAM(0x20000000-0x20007FFF) IROM(0-0x3FFFF) CLOCK(8000000) CPUTYPE("Cortex-M4") FPU2</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
-          <StartupFile>"Startup\TI\TM4C123\startup_TM4C123.s" ("TM4C123 Startup Code")</StartupFile>
-          <FlashDriverDll>UL2CM3(-O207 -S0 -C0 -FO7 -FD20000000 -FC800 -FN1 -FF0TM4C123_256 -FS00 -FL040000)</FlashDriverDll>
-          <DeviceId>5987</DeviceId>
-          <RegisterFile>TM4C123.h</RegisterFile>
+          <StartupFile>"STARTUP\Luminary\Startup.s" ("Luminary Startup Code")</StartupFile>
+          <FlashDriverDll>UL2CM3(-O207 -S0 -C0 -FO7 -FD20000000 -FC800 -FN1 -FF0LM4F_256 -FS00 -FL040000)</FlashDriverDll>
+          <DeviceId>5919</DeviceId>
+          <RegisterFile>LM4Fxxxx.H</RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
           <Asm></Asm>
           <Linker></Linker>
           <OHString></OHString>
           <InfinionOptionDll></InfinionOptionDll>
-          <SLE66CMisc>-DTM4C1230H6PM</SLE66CMisc>
+          <SLE66CMisc></SLE66CMisc>
           <SLE66AMisc></SLE66AMisc>
           <SLE66LinkerMisc></SLE66LinkerMisc>
-          <SFDFile>SFD\TI\TM4C123\TM4C1230H6PM.SFR</SFDFile>
+          <SFDFile></SFDFile>
           <bCustSvd>0</bCustSvd>
           <UseEnv>0</UseEnv>
           <BinPath></BinPath>
           <IncludePath></IncludePath>
           <LibPath></LibPath>
-          <RegisterFilePath>TI\TM4C123\</RegisterFilePath>
-          <DBRegisterFilePath>TI\TM4C123\</DBRegisterFilePath>
+          <RegisterFilePath>Luminary\</RegisterFilePath>
+          <DBRegisterFilePath>Luminary\</DBRegisterFilePath>
           <TargetStatus>
             <Error>0</Error>
             <ExitCodeStop>0</ExitCodeStop>
@@ -45,7 +45,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\</OutputDirectory>
-          <OutputName>Lab9_prep</OutputName>
+          <OutputName>ADCT0ATrigger</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
@@ -139,9 +139,9 @@
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
             <RestoreFunctions>0</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
-            <RestoreTracepoints>1</RestoreTracepoints>
+            <RestoreTracepoints>0</RestoreTracepoints>
             <RestoreSysVw>1</RestoreSysVw>
-            <UsePdscDebugDescription>0</UsePdscDebugDescription>
+            <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
           <TargetSelection>3</TargetSelection>
@@ -167,12 +167,12 @@
             <UseExternalTool>0</UseExternalTool>
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
-            <Capability>0</Capability>
-            <DriverSelection>-1</DriverSelection>
+            <Capability>1</Capability>
+            <DriverSelection>4097</DriverSelection>
           </Flash1>
-          <bUseTDR>1</bUseTDR>
-          <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3></Flash3>
+          <bUseTDR>0</bUseTDR>
+          <Flash2>BIN\lmidk-agdi.dll</Flash2>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -217,11 +217,11 @@
             <hadIRAM>1</hadIRAM>
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
-            <RvdsVP>2</RvdsVP>
+            <RvdsVP>1</RvdsVP>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
-            <useUlib>0</useUlib>
+            <useUlib>1</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
             <RoSelD>3</RoSelD>
@@ -343,26 +343,26 @@
             <RvctStartVector></RvctStartVector>
           </ArmAdsMisc>
           <Cads>
-            <interw>1</interw>
+            <interw>0</interw>
             <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
-            <OneElfS>0</OneElfS>
+            <OneElfS>1</OneElfS>
             <Strict>0</Strict>
             <EnumInt>0</EnumInt>
             <PlainCh>0</PlainCh>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
-            <wLevel>0</wLevel>
+            <wLevel>2</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>0</uC99>
             <useXO>0</useXO>
             <VariousControls>
-              <MiscControls></MiscControls>
-              <Define></Define>
+              <MiscControls>--C99</MiscControls>
+              <Define>rvmdk PART_LM4F120H5QR</Define>
               <Undefine></Undefine>
-              <IncludePath></IncludePath>
+              <IncludePath>..;..\..\..</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -383,7 +383,7 @@
             </VariousControls>
           </Aads>
           <LDads>
-            <umfTarg>1</umfTarg>
+            <umfTarg>0</umfTarg>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
             <noStLib>0</noStLib>
@@ -403,12 +403,12 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>Source Group 1</GroupName>
+          <GroupName>Source</GroupName>
           <Files>
             <File>
-              <FileName>UART.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\UART.c</FilePath>
+              <FileName>startup.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\startup.s</FilePath>
             </File>
             <File>
               <FileName>ADCT0ATrigger.c</FileName>
@@ -416,19 +416,14 @@
               <FilePath>.\ADCT0ATrigger.c</FilePath>
             </File>
             <File>
-              <FileName>Lab9_prep.c</FileName>
+              <FileName>ADCTestmain.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Lab9_prep.c</FilePath>
+              <FilePath>.\ADCTestmain.c</FilePath>
             </File>
             <File>
               <FileName>PLL.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\PLL.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>.\startup.s</FilePath>
             </File>
           </Files>
         </Group>
