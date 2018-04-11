@@ -7,7 +7,8 @@
 #include "Proximity.h"
 #include "Switch.h"
 #include "Graphics.h"
-#include "I2C.h"
+#include "SysTick.h"
+#include "UART.h"
 
 void EnableInterrupts(void);  // Enable interrupts
 void WaitForInterrupt(void);  // low power mode
@@ -44,9 +45,9 @@ int main(void) {
 	
 	DisableInterrupts();
 	PortF_Init();								// heartbeat
+	Proximity_Init();
 	Init_Graphics();
-  I2C_Init();
-	int chk = VL53L0X_Init();
+	UART_Init();
 //	draw_Main_Ship(20, 20);
 //	draw_Enemy_Ship(1, 80, 50);
 //	draw_Enemy_Ship(2, 50, 80);
@@ -56,14 +57,15 @@ int main(void) {
 //	Switch_Init(&Switch_Test, &Switch_Test);
 //	Sound_Init();
 //	
-//	EnableInterrupts();
+	SysTick_Init();
+	EnableInterrupts();
 //	Sound_Play(1);
-	int buff[20] = {0};
-	int counter = 0;
-	while(counter < 20){
-		int read = VL53L0X_ReadDistance();
-		for(int i = 0; i < 1000000; i ++){}
-		buff[counter++] = read;
+	while(1) {
+		SysTick_Wait(8000000);
+		requestEcho();
+		uint32_t range = getCurrentHandPosition();
+		UART_OutUDec(range);
+		UART_OutChar(CR);
+		UART_OutChar(LF);	
 	}
-	int a = 3;
 }

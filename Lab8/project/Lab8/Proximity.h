@@ -1,3 +1,3 @@
-int VL53L0X_Init(void);
-uint16_t VL53L0X_readRangeContinuousMillimeters(void);
-int VL53L0X_ReadDistance(void);
+void Proximity_Init(void);
+void requestEcho(void);
+uint32_t getCurrentHandPosition(void);
