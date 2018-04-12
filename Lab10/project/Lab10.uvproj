@@ -7,7 +7,7 @@
 
   <Targets>
     <Target>
-      <TargetName>ADCT0ATrigger</TargetName>
+      <TargetName>PWM</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
@@ -45,7 +45,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\</OutputDirectory>
-          <OutputName>Lab9_prep</OutputName>
+          <OutputName>Lab10</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
@@ -170,7 +170,7 @@
             <Capability>1</Capability>
             <DriverSelection>4097</DriverSelection>
           </Flash1>
-          <bUseTDR>0</bUseTDR>
+          <bUseTDR>1</bUseTDR>
           <Flash2>BIN\lmidk-agdi.dll</Flash2>
           <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
@@ -221,7 +221,7 @@
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
-            <useUlib>1</useUlib>
+            <useUlib>0</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
             <RoSelD>3</RoSelD>
@@ -350,7 +350,7 @@
             <OneElfS>1</OneElfS>
             <Strict>0</Strict>
             <EnumInt>0</EnumInt>
-            <PlainCh>0</PlainCh>
+            <PlainCh>1</PlainCh>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
             <wLevel>2</wLevel>
@@ -411,29 +411,29 @@
               <FilePath>.\startup.s</FilePath>
             </File>
             <File>
-              <FileName>ADCT0ATrigger.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\ADCT0ATrigger.c</FilePath>
-            </File>
-            <File>
-              <FileName>ADCTestmain.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\ADCTestmain.c</FilePath>
-            </File>
-            <File>
               <FileName>PLL.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\PLL.c</FilePath>
             </File>
             <File>
-              <FileName>UART.c</FileName>
+              <FileName>Lab10.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\UART.c</FilePath>
+              <FilePath>.\Lab10.c</FilePath>
             </File>
             <File>
-              <FileName>FIFO.c</FileName>
+              <FileName>PWM.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FIFO.c</FilePath>
+              <FilePath>.\PWM.c</FilePath>
+            </File>
+            <File>
+              <FileName>Switch.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Switch.c</FilePath>
+            </File>
+            <File>
+              <FileName>Tach.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Tach.c</FilePath>
             </File>
           </Files>
         </Group>
