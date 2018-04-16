@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include "../inc/tm4c123gh6pm.h"
 #include "PLL.h"
+#include "PWM.h"
 
 #define NVIC_EN0_INT19          0x00080000  // Interrupt 19 enable
 #define PF2                     (*((volatile uint32_t *)0x40025010))
@@ -17,6 +18,16 @@
 uint32_t Period;              // (1/clock) units
 uint32_t First;               // Timer0A first edge
 int32_t Done;                 // set each rising
+uint32_t E, U;
+extern uint32_t Target_Speed;
+
+uint32_t Tach_Read(){
+	return Period;
+}
+
+uint32_t Tach_Speed(){
+	return 200000000/Period;
+}
 
 void Tach_Init(void){
   SYSCTL_RCGCTIMER_R |= 0x01;// activate timer0    
@@ -45,6 +56,7 @@ void Tach_Init(void){
   NVIC_PRI4_R = (NVIC_PRI4_R&0x00FFFFFF)|0x40000000; // top 3 bits
   NVIC_EN0_R = NVIC_EN0_INT19;     // enable interrupt 19 in NVIC
 }
+
 void Timer0A_Handler(void){
   PF2 = PF2^0x04;  // toggle PF2
   PF2 = PF2^0x04;  // toggle PF2
@@ -53,8 +65,10 @@ void Timer0A_Handler(void){
   First = TIMER0_TAR_R;            // setup for next
   Done = 1;
   PF2 = PF2^0x04;  // toggle PF2
-}
 
-uint32_t Tach_Read(){
-	return Period;
+	E = Target_Speed - Tach_Speed();
+	U += (3*E)/64;
+	if(U<100) U=100;
+	if(U>39900) U=39900;
+	Motor_SetDuty(U);
 }

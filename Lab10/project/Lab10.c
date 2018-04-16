@@ -30,12 +30,21 @@
 #include "Tach.h"
 #include "Switch.h"
 
+uint32_t Target_Speed = 300;
+
 void WaitForInterrupt(void);  // low power mode
+
+void Switch_1(void){
+	if (!(Target_Speed<=150)) Target_Speed += 50;
+}
+void Switch_2(void){
+	if (!(Target_Speed>=400)) Target_Speed -= 50;
+}
 
 int main(void){
   PLL_Init(Bus80MHz);               // bus clock at 80 MHz
   Motor_Init(40000, 30000);         // initialize Motor, 1000 Hz, 75% duty
-	Switch_Init();
+	Switch_Init(&Switch_1,&Switch_2);
 	
   while(1){
     WaitForInterrupt();
