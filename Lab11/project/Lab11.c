@@ -44,10 +44,10 @@ int main(void) {
 	PLL_Init(Bus80MHz);         // set system clock to 80 MHz
 	
 	DisableInterrupts();
-	PortF_Init();								// heartbeat
-	Proximity_Init();
-	Init_Graphics();
-	UART_Init();
+//	PortF_Init();								// heartbeat
+//	Proximity_Init();
+//	Init_Graphics();
+//	UART_Init();
 //	draw_Main_Ship(20, 20);
 //	draw_Enemy_Ship(1, 80, 50);
 //	draw_Enemy_Ship(2, 50, 80);
@@ -55,17 +55,17 @@ int main(void) {
 //	draw_Boss(1, 80, 60);
 //	draw_Boss(2, 160, 60);
 //	Switch_Init(&Switch_Test, &Switch_Test);
-//	Sound_Init();
+	Sound_Init();
 //	
-	SysTick_Init();
+//	SysTick_Init();
 	EnableInterrupts();
 //	Sound_Play(1);
 	while(1) {
-		SysTick_Wait(8000000);
-		requestEcho();
-		uint32_t range = getCurrentHandPosition();
-		UART_OutUDec(range);
-		UART_OutChar(CR);
-		UART_OutChar(LF);	
+//		SysTick_Wait(8000000);
+//		requestEcho();
+//		uint32_t range = getCurrentHandPosition();
+//		UART_OutUDec(range);
+//		UART_OutChar(CR);
+//		UART_OutChar(LF);	
 	}
 }
