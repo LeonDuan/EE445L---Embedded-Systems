@@ -14,12 +14,6 @@ void EnableInterrupts(void);  // Enable interrupts
 void WaitForInterrupt(void);  // low power mode
 void DisableInterrupts(void); // Disable interrupts
 
-uint16_t cur_stage = 1;
-void Graphics_Test(void) {
-	cur_stage ++;
-	if (cur_stage == 4) cur_stage = 1;
-	draw_Explosion(cur_stage, 50,50);
-}
 
 // for heartbeat
 void PortF_Init(void){
@@ -59,7 +53,7 @@ int main(void) {
 //	
 //	SysTick_Init();
 	EnableInterrupts();
-//	Sound_Play(1);
+	Sound_Play(1);
 	while(1) {
 //		SysTick_Wait(8000000);
 //		requestEcho();
