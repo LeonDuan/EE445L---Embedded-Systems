@@ -12,26 +12,32 @@
 
 // reserve 4-9 for adding more enemy types in the future
 
+typedef struct {
+	int x;
+	int y;
+}Coordinate;
 
 typedef struct {
 	int x;
 	int y;
-	int vx;
-	int vy;
+	int xold;
+	int yold;
 	int width;
 	int height;
 	int hp;
 	int type; //0 for my ship; 1, 2, or 3 for enemy ships (for drawing)
+	int valid; //1 = valid; 0 = removed, clear from screen; -1 = removed from screen
 }Ship;
 
 typedef struct {
 	int x;
 	int y;
-	int vx;
-	int vy;
+	int xold;
+	int yold;
 	int width;
 	int height;
-	int valid;
+	int valid;	//1 = valid; 0 = removed, clear from screen; -1 = removed from screen
+	int dmg;
 }Bullet;
 
 typedef struct {
@@ -40,15 +46,17 @@ typedef struct {
 	int stage;
 }Explosion;
 
+typedef Ship * shipMatrix[][NUM_MAX_ENEMIES_ROW];
 
 // functions that main() calls
 void Init_Level(int stage);
 void Update_Every_Object(void);
 int Is_GameOver(void);
 int Is_LevelWon(void);	
+int Is_GameWon(void);
 
 // ------------------ Get Functions ------------------
-Ship ** Get_Enemies(void);
+shipMatrix * Get_Enemies(void);
 Ship * Get_Boss(void);
 Ship * Get_My_Ship(void);
 Bullet ** Get_Enemy_Bullets(void);
