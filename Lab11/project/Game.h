@@ -53,6 +53,7 @@ void Init_Level(int);
 int Is_GameOver(void);
 int Is_LevelWon(void);	
 int Is_GameWon(void);
+int Get_Stage(void);
 
 // Update Objects
 void Check_Hit(void);
