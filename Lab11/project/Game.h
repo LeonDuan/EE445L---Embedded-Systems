@@ -7,8 +7,8 @@
 #define 		NUM_MAX_ENEMIES_ROW			5
 #define			NUM_MAX_ENEMIES_COLUMN	4
 #define 		NUM_ENEMY_BULLETS				100
-#define 		NUM_MY_BULLETS					20
-#define 		NUM_MAX_EXPLOSIONS			21
+#define 		NUM_MY_BULLETS					100
+#define 		NUM_MAX_EXPLOSIONS			20
 
 // reserve 4-9 for adding more enemy types in the future
 

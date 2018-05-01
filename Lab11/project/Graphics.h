@@ -4,3 +4,4 @@ void Draw_Enemies(void);
 void Draw_Boss(void);
 void Draw_My_Ship(void);
 void Draw_Bullets(void);
+void Draw_Dummy(void);

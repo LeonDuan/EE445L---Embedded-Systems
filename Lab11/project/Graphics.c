@@ -482,7 +482,9 @@ const unsigned short boss2_bmp[] = {
 };
 
 
-
+void Draw_Dummy(void){
+	ST7735_DrawBitmap(50, 50, my_ship_bmp, 20, 10);
+}
 
 
 

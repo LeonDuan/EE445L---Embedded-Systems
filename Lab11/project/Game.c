@@ -52,10 +52,13 @@ const Ship Boss[2] = {
 
 const Ship Player = {10,70,-100,-100,MAIN_SHIP_WIDTH,MAIN_SHIP_HEIGHT,10,MY_SHIP,1};
 
+
+Ship enemyStructs[20];
+
 extern int enemyMultiplier;
 static int current_stage;
-static int enemy_direction = RIGHT;
-static int boss_direction = RIGHT;
+static int enemy_direction = UP;
+static int boss_direction = UP;
 static int flag_GameOver = 0;
 static int flag_NextStage = 0;
 static int flag_GameWin = 0;
@@ -87,7 +90,7 @@ int Is_Hit(Ship * ship, Bullet * bullet) {
 }
 
 Ship get_RndShip(void) {
-	int col = Random()%3;
+	int col = 1;;
 	while(1) {
 		for (int i = 4; i >= 0; i--) {
 			if (enemies[col][i]->hp > 0) return *enemies[col][i];
@@ -141,7 +144,7 @@ void Update_Enemies(void){
 	switch (enemy_direction) {
 		case (UP):
 			for (int i = 0; i < NUM_MAX_ENEMIES_COLUMN; i++) {
-				for (int j = 0; i < NUM_MAX_ENEMIES_ROW; j++) {
+				for (int j = 0; j < NUM_MAX_ENEMIES_ROW; j++) {
 					if (enemies[i][j]->valid > 0) {
 						if (enemies[i][j]->y >= 128) {
 							enemy_direction = LEFT;
@@ -306,13 +309,13 @@ void Update_My_Bullets(void){
 
 void Init_Level(int stage){
 	int gp_counter = 0;
-	Random_Init(1);
 	switch (stage) {
 		case 1:
 			//Initialize Enemy Grid
 			for (int i = 0; i < NUM_MAX_ENEMIES_COLUMN; i++) {
 				for (int j = 0; j < NUM_MAX_ENEMIES_ROW; j++) {
-					*enemies[i][j] = Enemy[Random()%3];
+					enemies[i][j] = &enemyStructs[gp_counter];
+					*enemies[i][j] = Enemy[1];
 					enemies[i][j]->x = enemyGrid[gp_counter].x;
 					enemies[i][j]->y = enemyGrid[gp_counter].y;
 				}

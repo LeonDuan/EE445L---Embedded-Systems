@@ -85,7 +85,7 @@ void simulate(void) {
 			Check_Hit();
 			Draw_Enemies();
 		}
-		if (Update_Boss_Counter == 0) {
+		if (Update_Boss_Counter == 0 && Get_Stage() == 2) {
 			Update_Boss();
 			Check_Hit();
 			Draw_Boss();
@@ -127,5 +127,6 @@ int main(void) {
 //	Sound_Play(1);
 	while(1) {
 		simulate();
+		// Draw_Dummy();
 	}
 }
