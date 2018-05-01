@@ -14,7 +14,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
-#include <time.h>
+#include "Random.h"
 #include "Game.h"
 #include "Proximity.h"
 
@@ -87,7 +87,7 @@ int Is_Hit(Ship * ship, Bullet * bullet) {
 }
 
 Ship get_RndShip(void) {
-	int col = rand()%3;
+	int col = Random()%3;
 	while(1) {
 		for (int i = 4; i >= 0; i--) {
 			if (enemies[col][i]->hp > 0) return *enemies[col][i];
@@ -306,13 +306,13 @@ void Update_My_Bullets(void){
 
 void Init_Level(int stage){
 	int gp_counter = 0;
-	srand(time(NULL));
+	Random_Init(1);
 	switch (stage) {
 		case 1:
 			//Initialize Enemy Grid
 			for (int i = 0; i < NUM_MAX_ENEMIES_COLUMN; i++) {
 				for (int j = 0; j < NUM_MAX_ENEMIES_ROW; j++) {
-					*enemies[i][j] = Enemy[rand()%3];
+					*enemies[i][j] = Enemy[Random()%3];
 					enemies[i][j]->x = enemyGrid[gp_counter].x;
 					enemies[i][j]->y = enemyGrid[gp_counter].y;
 				}
