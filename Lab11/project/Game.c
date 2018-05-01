@@ -268,7 +268,7 @@ void Update_Boss(void){
 void Update_Enemy_Bullets(void){
 	for (int i = 0; i < NUM_ENEMY_BULLETS; i++) {
 		if (enemy_bullets[i].valid > 0) {
-			if ((enemy_bullets[i].x+enemy_bullets[i].width) < 160) {
+			if ((enemy_bullets[i].x+enemy_bullets[i].width) <= 160) {
 				if (Is_Hit(&my_ship,&enemy_bullets[i]))	{
 					my_ship.hp -= enemy_bullets[i].dmg;
 					if (my_ship.hp < 0) {
@@ -295,7 +295,7 @@ void Update_My_Ship(int direction){
 void Update_My_Bullets(void){
 	for (int i = 0; i < NUM_MY_BULLETS; i++) {
 		if (my_bullets[i].valid > 0) {
-			if (my_bullets[i].x < 160) {
+			if (my_bullets[i].x >= 10) {
 				my_bullets[i].xold = my_bullets[i].x;
 				my_bullets[i].yold = my_bullets[i].y;
 				my_bullets[i].x -= 1;
