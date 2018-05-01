@@ -338,7 +338,7 @@ void Add_Bullets(int enemy){
 	switch (enemy) {
 		case 0:
 			for (int i = 0; i < NUM_MY_BULLETS; i++) {
-				if (my_bullets[i]->valid != 1 && my_bullets[i]->valid != 1 && my_ship->valid > 0) {
+				if (my_bullets[i]->valid != 0 && my_bullets[i]->valid != 1 && my_ship->valid > 0) {
 					my_bullets[i]->x = my_ship->x + my_ship->width + 1;
 					my_bullets[i]->xold = -100;
 					my_bullets[i]->y = my_ship->y - (my_ship->height/2);
