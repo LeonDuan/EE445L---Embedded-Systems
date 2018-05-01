@@ -46,7 +46,7 @@ typedef struct {
 	int stage;
 }Explosion;
 
-typedef Ship * shipMatrix[][NUM_MAX_ENEMIES_ROW];
+typedef Ship * shipMatrix[NUM_MAX_ENEMIES_COLUMN][NUM_MAX_ENEMIES_ROW];
 
 // functions that main() calls
 void Init_Level(int);
@@ -64,9 +64,10 @@ void Update_My_Bullets(void);
 void Add_Bullets(int);
 
 // ------------------ Get Functions ------------------
-shipMatrix * Get_Enemies(void);
+Ship ** Get_Enemies(void);
 Ship * Get_Boss(void);
 Ship * Get_My_Ship(void);
 Bullet ** Get_Enemy_Bullets(void);
 Bullet ** Get_My_Bullets(void);
 Explosion ** Get_Explosions(void);
+int Get_Stage(void);

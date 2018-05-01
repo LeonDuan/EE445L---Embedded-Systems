@@ -15,6 +15,10 @@ void EnableInterrupts(void);  // Enable interrupts
 void WaitForInterrupt(void);  // low power mode
 void DisableInterrupts(void); // Disable interrupts
 
+#define 			DEFAULT_ENEMY_COUNTER					10
+#define				DEFAULT_BOSS_COUNTER					5
+#define 			DEFAULT_ENEMY_BULLET_COUNTER	80
+#define				DEFAULT_BOSS_BULLET_COUNTER		80
 
 // for heartbeat
 void PortF_Init(void){
@@ -45,11 +49,12 @@ int Should_Terminate() {
 }
 
 int enemyMultiplier = 1;
-int Update_Enemies_Counter = 10;
-int Update_Boss_Counter = 5;
-int Update_My_Ship_Counter = 5;
+int Update_Enemies_Counter = 0;
+int Update_Boss_Counter = 0;
+int Update_My_Ship_Counter = 0;
 int Add_My_Bullets_Counter = 40;
-int Add_Enemy_Bullets_Counter = 60;
+int Add_Enemy_Bullets_Counter = 80;
+int Add_Boss_Bullets_Counter = 80;
 void Update_Objects(void) {
 	if (Update_Enemies_Counter == 0) {
 		Update_Enemies_Counter = DEFAULT_ENEMY_COUNTER/enemyMultiplier;
@@ -57,13 +62,55 @@ void Update_Objects(void) {
 	if (Update_Boss_Counter == 0) {
 		Update_Boss_Counter = DEFAULT_BOSS_COUNTER/enemyMultiplier;
 	}
-	if (Update_Ene
+	if (Add_Enemy_Bullets_Counter == 0) {
+		Add_Enemy_Bullets_Counter = DEFAULT_ENEMY_BULLET_COUNTER/enemyMultiplier;
+	}
+	if (Add_Enemy_Bullets_Counter == 0) {
+		Add_Enemy_Bullets_Counter = DEFAULT_BOSS_BULLET_COUNTER/enemyMultiplier;
+	}
 
 	Update_Enemies_Counter --;
-	Update_Boss_Counter--;
-	Update_My_Ship_Counter--;
-	Update_My_Ship_Counter--;
-	Add_Enemy_Bullets_Counter--;
+	Update_Boss_Counter --;
+	Add_Enemy_Bullets_Counter --;
+	Add_Boss_Bullets_Counter --;
+	Update_My_Ship_Counter --;
+	Add_My_Bullets_Counter --;
+}
+
+void simulate(void) {
+	Init_Level(1);
+	while(1){
+		if (Update_Enemies_Counter == 0) {
+			Update_Enemies();
+			Check_Hit();
+			Draw_Enemies();
+		}
+		if (Update_Boss_Counter == 0) {
+			Update_Boss();
+			Check_Hit();
+			Draw_Boss();
+		}
+		if (Update_My_Ship_Counter == 0) {
+			Update_My_Ship(getCurrentHandPosition());
+			Check_Hit();
+			Draw_My_Ship();
+		}
+		if (Add_My_Bullets_Counter == 0) {
+			Add_Bullets(0);
+			Check_Hit();
+			Draw_Bullets();
+		}
+		if (Add_Enemy_Bullets_Counter == 0 && Get_Stage() == 1) {
+			Add_Bullets(1);
+			Check_Hit();
+			Draw_Bullets();
+		}
+		if (Add_Boss_Bullets_Counter == 0 && Get_Stage() == 2) {
+			Add_Bullets(2);
+			Check_Hit();
+			Draw_Bullets();
+		}
+	}
 }
 
 int main(void) {
@@ -78,7 +125,7 @@ int main(void) {
 	Timer5A_Init(&Update_Objects, 4000000);
 	EnableInterrupts();
 //	Sound_Play(1);
-	while(!Should_Terminate()) {
-		Update_Screen();
+	while(1) {
+		simulate();
 	}
 }

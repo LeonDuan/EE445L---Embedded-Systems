@@ -400,8 +400,8 @@ int Is_GameWon(void) {
 }
 
 // ------------------------ Get Functions ------------------------
-shipMatrix * Get_Enemies(void) {
-	return &enemies;
+Ship ** Get_Enemies(void) {
+	return &enemies[0][0];
 }
 
 Ship * Get_Boss(void){
@@ -422,4 +422,8 @@ Bullet ** Get_My_Bullets(void){
 
 Explosion ** Get_Explosions(void){
 	return explosions;
+}
+
+int Get_Stage(void) {
+	return current_stage;
 }

@@ -523,45 +523,58 @@ void Draw_Explosion(Explosion * explosion){
 	ST7735_DrawBitmap(explosion->x, explosion->y, to_draw, EXPLOSION_HEIGHT, EXPLOSION_WIDTH);	
 }
 
-//void Update_Screen() {
-//	// --------------------- draw enemies ---------------------
-//	for (int i = 0; i < NUM_MAX_ENEMIES; i++){
-//		Ship * enemy = Get_Enemies()[0];
-//		
-//		// draw the enemy if its alive
-//		if (enemy->hp > 0) {
-//			Draw_Ship(enemy);
-//		}
-//		
-//		// if the enemy just died
-//		// TODO
-//	}
-//	
-//	// --------------------- draw enemies' bullets ---------------------
-//	for (int i = 0; i < NUM_ENEMY_BULLETS; i++){
-//		Bullet * bullet = Get_Enemy_Bullets()[i];
-//		Draw_Bullet(bullet);
-//	}
-//	
-//	// --------------------- draw boss ---------------------
-//	Draw_Ship(Get_Boss());
-//	
-//	
-//	// --------------------- draw my ship ---------------------
-//	Draw_Ship(Get_My_Ship());
-//	
-//	// --------------------- draw my bullets ---------------------
-//	for (int i = 0; i < NUM_MY_BULLETS; i++){
-//		Bullet * bullet = Get_My_Bullets()[i];
-//		Draw_Bullet(bullet);
-//	}
+void Draw_Enemies(void){
+	Ship ** enemies = Get_Enemies();
+	for (int i = 0; i < NUM_MAX_ENEMIES_COLUMN; i ++) {
+		for (int j = 0; j < NUM_MAX_ENEMIES_ROW; j ++) {
+			Ship * enemy = enemies[i * NUM_MAX_ENEMIES_COLUMN + j];
+			if (enemy->valid) {
+				ST7735_FillRect(enemy->yold, enemy->xold, enemy->height, enemy->width, ST7735_BLACK);
+				Draw_Ship(enemies[i * NUM_MAX_ENEMIES_COLUMN + j]);
+			}
+			else if (enemy->valid == 0) {
+				ST7735_FillRect(enemy->y, enemy->x, enemy->height, enemy->width, ST7735_BLACK);
+				enemy->valid = -1;
+			}
+		}
+	}
+}
 
-//	// --------------------- draw explosions  ---------------------
-//	for (int i = 0; i < NUM_MAX_ENEMIES; i++){
-//		Explosion * explosion = Get_Explosions()[i];
-//		if (explosion == NULL) continue;
-//		if (explosion->stage > 3) continue;
-//		Draw_Explosion(explosion);
-//		explosion->stage++;
-//	}
-// }
+void Draw_Boss(void) {
+	Ship * boss = Get_Boss();
+	if (boss->valid) {
+		Draw_Ship(boss);
+	}
+}
+void Draw_My_Ship(void) {
+	Ship * my_ship = Get_My_Ship();
+	Draw_Ship(my_ship);
+}
+
+void Draw_Bullets(void) {
+	Bullet ** my_bullets = Get_My_Bullets();
+	for (int i = 0; i < NUM_MY_BULLETS; i ++) {
+		Bullet * bullet = my_bullets[i];
+		if (bullet->valid == 1){
+			ST7735_FillRect(bullet->yold, bullet->xold, bullet->height, bullet->width, ST7735_BLACK);
+			Draw_Bullet(bullet);
+		}
+		else if (bullet->valid == 0) {
+			ST7735_FillRect(bullet->y, bullet->x, bullet->height, bullet->width, ST7735_BLACK);
+			bullet->valid = -1;
+		}
+	}
+	
+	Bullet ** enemy_bullets = Get_Enemy_Bullets();
+	for (int i = 0; i < NUM_ENEMY_BULLETS; i ++) {
+		Bullet * bullet = enemy_bullets[i];
+		if (bullet->valid == 1){
+			ST7735_FillRect(bullet->yold, bullet->xold, bullet->height, bullet->width, ST7735_BLACK);
+			Draw_Bullet(bullet);
+		}
+		else if (bullet->valid == 0) {
+			ST7735_FillRect(bullet->y, bullet->x, bullet->height, bullet->width, ST7735_BLACK);
+			bullet->valid = -1;
+		}
+	}
+}
