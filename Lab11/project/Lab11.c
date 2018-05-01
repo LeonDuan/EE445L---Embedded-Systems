@@ -44,6 +44,28 @@ int Should_Terminate() {
 		return 0;
 }
 
+int enemyMultiplier = 1;
+int Update_Enemies_Counter = 10;
+int Update_Boss_Counter = 5;
+int Update_My_Ship_Counter = 5;
+int Add_My_Bullets_Counter = 40;
+int Add_Enemy_Bullets_Counter = 60;
+void Update_Objects(void) {
+	if (Update_Enemies_Counter == 0) {
+		Update_Enemies_Counter = DEFAULT_ENEMY_COUNTER/enemyMultiplier;
+	}		
+	if (Update_Boss_Counter == 0) {
+		Update_Boss_Counter = DEFAULT_BOSS_COUNTER/enemyMultiplier;
+	}
+	if (Update_Ene
+
+	Update_Enemies_Counter --;
+	Update_Boss_Counter--;
+	Update_My_Ship_Counter--;
+	Update_My_Ship_Counter--;
+	Add_Enemy_Bullets_Counter--;
+}
+
 int main(void) {
 	PLL_Init(Bus80MHz);         // set system clock to 80 MHz
 	
@@ -51,11 +73,12 @@ int main(void) {
 	PortF_Init();								// heartbeat
 	Proximity_Init();
 	Init_Graphics();
-	
 	SysTick_Init();
+	
+	Timer5A_Init(&Update_Objects, 4000000);
 	EnableInterrupts();
 //	Sound_Play(1);
 	while(!Should_Terminate()) {
-		
+		Update_Screen();
 	}
 }

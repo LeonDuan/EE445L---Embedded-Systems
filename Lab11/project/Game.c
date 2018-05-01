@@ -334,8 +334,8 @@ void Init_Level(int stage){
 	}
 }
 
-void Add_Bullets(int enemy){
-	switch (enemy) {
+void Add_Bullets(int ship){
+	switch (ship) {
 		case 0:
 			for (int i = 0; i < NUM_MY_BULLETS; i++) {
 				if (my_bullets[i]->valid != 0 && my_bullets[i]->valid != 1 && my_ship->valid > 0) {
@@ -365,7 +365,7 @@ void Add_Bullets(int enemy){
 				}
 			}
 			break;
-		case 3:
+		case 2:
 			for (int i = 0; i < NUM_MY_BULLETS; i++) {
 				if (!my_bullets[i]->valid != 0 && my_bullets[i]->valid != 1 && boss->valid > 0) {
 					enemy_bullets[i]->x = boss->x - boss->width - 1;
