@@ -52,6 +52,7 @@ const Ship Boss[2] = {
 
 const Ship Player = {10,70,-100,-100,MAIN_SHIP_WIDTH,MAIN_SHIP_HEIGHT,10,MY_SHIP,1};
 
+extern int enemyMultiplier;
 static int current_stage;
 static int enemy_direction = RIGHT;
 static int boss_direction = RIGHT;
@@ -108,6 +109,9 @@ void Check_Hit() {
 									Add_Explosion(enemies[j][k]->x,enemies[j][k]->y);
 									enemies[j][k]->valid = 0;
 									remaining_Enemies -= 1;
+									if (remaining_Enemies < 10) enemyMultiplier = 2;
+									if (remaining_Enemies < 5)	enemyMultiplier = 3;
+									
 								}
 							}
 						}
@@ -125,6 +129,8 @@ void Check_Hit() {
 							boss->valid = 0;
 							flag_GameWin = 1;
 						}
+						else if (boss->hp < 10) enemyMultiplier = 2;
+						else if (boss->hp < 5) enemyMultiplier = 3;
 					}
 				}
 			}
