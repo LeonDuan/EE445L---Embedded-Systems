@@ -36,26 +36,27 @@ void Timer0A_Handler(void){
   (*PeriodicTask0A)();                // execute user task
 }
 
-void Timer0B_Init(void(*task)(void), uint32_t period){ 
-	SYSCTL_RCGC1_R |= SYSCTL_RCGC1_TIMER0; // 0) activate
-	PeriodicTask0B = task;          // user function
-	TIMER0_CTL_R &= ~0x00000100; // 1) disable timer0B 
-	TIMER0_CFG_R = 0x00000000; // 2) 16-bit mode
-	TIMER0_TBMR_R = 0x00000002; // 3) periodic mode
-	TIMER0_TBILR_R = period-1; // 4) reload value
-	TIMER0_TBPR_R = 0; // 5) 12.5 ns
-	TIMER0_ICR_R |= 0x00000100; // 6) clear flag
-	TIMER0_IMR_R |= 0x00000100; // 7) arm timeout
-	NVIC_PRI5_R = (NVIC_PRI5_R&0xFFFFFF00)|0x00000040; 
-	NVIC_EN0_R |= 1<<20; // 9) enable int 20}
-	TIMER0_CTL_R |= 0x00000100;
+void Timer0B_Init(void(*task)(void), uint32_t period){long sr;
+  sr = StartCritical(); 
+  SYSCTL_RCGCTIMER_R |= 0x01;   			// 0) activate TIMER0
+  PeriodicTask0B = task;          			// user function
+  TIMER0_CTL_R = 0x00000000;    			// 1) disable TIMER0B during setup
+  TIMER0_CFG_R = TIMER_CFG_16_BIT;    // 2) configure for 16-bit mode
+  TIMER0_TBMR_R = 0x00000002;   			// 3) configure for periodic mode, default down-count settings
+  TIMER0_TBILR_R = period-1;    			// 4) reload value
+  TIMER0_TBPR_R = 0;            			// 5) bus clock resolution
+  TIMER0_ICR_R = TIMER_ICR_TBTOCINT;  // 6) clear TIMER0B timeout flag
+  TIMER0_IMR_R = TIMER_IMR_TBTOIM;    // 7) arm timeout interrupt
+  NVIC_PRI5_R = (NVIC_PRI5_R&0xFFFFFF00)|0x00000040; // 8) bits 5-7
+  NVIC_EN0_R = 1<<20;           // 9) enable IRQ 19 in NVIC
+  TIMER0_CTL_R = 0x00000001;    // 10) enable TIMER0A
+  EndCritical(sr);
 }
 
 void Timer0B_Handler(void){
-  TIMER0_ICR_R = TIMER_ICR_TATOCINT;// acknowledge timer0A timeout
+  TIMER0_ICR_R = TIMER_ICR_TBTOCINT;// acknowledge timer0A timeout
   (*PeriodicTask0B)();                // execute user task
 }
-
 
 void Timer1A_Init(void(*task)(void), uint32_t period){
   SYSCTL_RCGCTIMER_R |= 0x02;   // 0) activate TIMER1

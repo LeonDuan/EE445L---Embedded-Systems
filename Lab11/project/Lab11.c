@@ -61,7 +61,7 @@ int main(void) {
 //	Sound_Init();
 //	
 //	SysTick_Init();
-	Timer0A_Init(&dummy0, 800000);
+	// Timer0A_Init(&dummy0, 800000);
 	Timer0B_Init(&dummy1, 800000);
 	EnableInterrupts();
 //	Sound_Play(1);
