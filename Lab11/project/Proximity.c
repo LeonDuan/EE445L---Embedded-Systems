@@ -1,9 +1,19 @@
 #include <stdint.h>
 #include "../inc/tm4c123gh6pm.h"
-#include "SysTick.h"
+#include "Timer.h"
 
 uint32_t start;
 uint32_t currentPos;
+
+void stopEcho(void) {
+	TIMER4_IMR_R &= ~0x00000001; // disarm timer
+	GPIO_PORTD_DATA_R &= ~0x01;  //End Trigger
+}
+
+void requestEcho(void) {
+	GPIO_PORTD_DATA_R |= 0x01;			// Trigger Ultrasonic Sensor
+	Timer4A_Arm(&stopEcho,1000);
+}
 
 void Proximity_Init(void) {
 	SYSCTL_RCGCGPIO_R |= 0x08;        // 1) activate port D
@@ -22,7 +32,11 @@ void Proximity_Init(void) {
   GPIO_PORTD_ICR_R = 0x02;      // (e) clear flag4
 	GPIO_PORTD_IM_R |= 0x02;
 	NVIC_PRI0_R = (NVIC_PRI0_R&0x00FFFFFF)|0xA0000000; // (g) priority 5
-  NVIC_EN0_R |= 0x08;      // (h) 
+  NVIC_EN0_R |= 0x08;      // (h)
+	
+	SYSCTL_RCGCTIMER_R |= 0x10;   // 0) activate TIMER4
+		
+	Timer3A_Init(&requestEcho,8000000);
 }
 
 int count = 0;
@@ -40,12 +54,6 @@ void GPIOPortD_Handler(void){
 		start = NVIC_ST_CURRENT_R;
 	}
 	GPIO_PORTD_ICR_R |= 0x02;      // acknowledge flag4
-}
-
-void requestEcho(void) {
-	GPIO_PORTD_DATA_R |= 0x01;			// Trigger Ultrasonic Sensor
-	SysTick_Wait(1000);							// 12.5 us (the sensor requires >10 us)
-	GPIO_PORTD_DATA_R &= ~0x01;			// Turn off trigger
 }
 
 uint32_t getCurrentHandPosition(void) {

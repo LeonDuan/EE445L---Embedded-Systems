@@ -102,12 +102,11 @@ void Timer3A_Handler(void){
   (*PeriodicTask3A)();                // execute user task
 }
 
-void Timer4A_Init(void(*task)(void), uint32_t period){
-  SYSCTL_RCGCTIMER_R |= 0x10;   // 0) activate TIMER3
+void Timer4A_Arm(void(*task)(void), uint32_t period){
   PeriodicTask4A = task;          // user function
   TIMER4_CTL_R &= ~0x00000000;    // 1) disable TIMER4A during setup
   TIMER4_CFG_R = 0x00000000;    // 2) configure for 32-bit mode
-  TIMER4_TAMR_R = 0x00000002;   // 3) configure for periodic mode, default down-count settings
+  TIMER4_TAMR_R = 0x00000001;   // 3) configure for one-shot mode
   TIMER4_TAILR_R = period-1;    // 4) reload value
   TIMER4_TAPR_R = 0;            // 5) bus clock resolution
   TIMER4_ICR_R = 0x00000001;    // 6) clear TIMER3A timeout flag
