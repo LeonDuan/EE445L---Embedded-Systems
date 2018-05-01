@@ -25,6 +25,8 @@
 #define ENEMY_SHIP_HEIGHT	15
 #define BOSS_WIDTH				54
 #define BOSS_HEIGHT				50
+#define BULLET_WIDTH			5
+#define BULLET_HEIGHT			2
 #define UP								1
 #define	LEFT							2
 #define DOWN							3
@@ -343,6 +345,8 @@ void Add_Bullets(int enemy){
 					my_bullets[i]->yold = -100;
 					my_bullets[i]->valid = 1;
 					my_bullets[i]->dmg = 1;
+					my_bullets[i]->height = BULLET_HEIGHT;
+					my_bullets[i]->width = BULLET_WIDTH;
 				}
 			}
 			break;
@@ -356,6 +360,8 @@ void Add_Bullets(int enemy){
 					enemy_bullets[i]->yold = -100;
 					enemy_bullets[i]->valid = 1;
 					enemy_bullets[i]->dmg = 1;
+					enemy_bullets[i]->height = BULLET_HEIGHT;
+					enemy_bullets[i]->width = BULLET_WIDTH;
 				}
 			}
 			break;
@@ -368,9 +374,23 @@ void Add_Bullets(int enemy){
 					enemy_bullets[i]->yold = -100;
 					enemy_bullets[i]->valid = 1;
 					enemy_bullets[i]->dmg = 2;
+					enemy_bullets[i]->height = BULLET_HEIGHT;
+					enemy_bullets[i]->width = BULLET_WIDTH;
 				}
 			}
 	}
+}
+
+int Is_GameOver(void) {
+	return flag_GameOver;
+}
+
+int Is_LevelWon(void) {
+	return (!remaining_Enemies);
+}
+
+int Is_GameWon(void) {
+	return flag_GameWin;
 }
 
 // ------------------------ Get Functions ------------------------
@@ -396,16 +416,4 @@ Bullet ** Get_My_Bullets(void){
 
 Explosion ** Get_Explosions(void){
 	return explosions;
-}
-
-int Is_GameOver(void) {
-	return flag_GameOver;
-}
-
-int Is_LevelWon(void) {
-	return (!remaining_Enemies);
-}
-
-int Is_GameWon(void) {
-	return flag_GameWin;
 }

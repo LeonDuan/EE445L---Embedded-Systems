@@ -28,46 +28,34 @@ void PortF_Init(void){
   GPIO_PORTF_AMSEL_R = 0;     // disable analog functionality on PF 
 }
 
-uint16_t tof_buffer[1000];
-
-// dummy code for testing switches
-void Switch_Test(){
-	GPIO_PORTF_DATA_R = GPIO_PORTF_DATA_R^0x04; // toggle PF2
-}
-
-void dummy0(void) {
-	int a = 3;
-}
-
-void dummy1(void) {
-	int b = 3;
+int Should_Terminate() {
+		if (Is_GameOver()) {
+			// TODO
+			return 1;
+		}
+		else if (Is_LevelWon()) {
+			// TODO
+			return 1;
+		}
+		else if (Is_GameWon()) {
+			// TODO
+			return 1;
+		}
+		return 0;
 }
 
 int main(void) {
 	PLL_Init(Bus80MHz);         // set system clock to 80 MHz
 	
 	DisableInterrupts();
-//	PortF_Init();								// heartbeat
-//	Proximity_Init();
-//	Init_Graphics();
-//	draw_Main_Ship(20, 20);
-//	draw_Enemy_Ship(1, 80, 50);
-//	draw_Enemy_Ship(2, 50, 80);
-//	draw_Enemy_Ship(3, 110, 100);
-//	draw_Boss(1, 80, 60);
-//	draw_Boss(2, 160, 60);
-//	Switch_Init(&Switch_Test, &Switch_Test);
-//	Sound_Init();
-//	
-	Timer5A_Init(&dummy0, 800000);
-//	SysTick_Init();
+	PortF_Init();								// heartbeat
+	Proximity_Init();
+	Init_Graphics();
+	
+	SysTick_Init();
 	EnableInterrupts();
 //	Sound_Play(1);
-	while(1) {
-//		SysTick_Wait(8000000);
-//		requestEcho();
-//		uint32_t range = getCurrentHandPosition();
-//		ST7735_SetCursor(0,0);
-//		ST7735_OutUDec(range);
+	while(!Should_Terminate()) {
+		
 	}
 }

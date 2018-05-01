@@ -508,7 +508,8 @@ void Draw_Ship(Ship * ship) {
 void Draw_Bullet(Bullet * bullet) {
 	if (!bullet->valid) return;
 	else {
-		// TODO
+		ST7735_DrawFastHLine(bullet->y, bullet->x, bullet->width, ST7735_WHITE);
+		ST7735_DrawFastHLine((bullet->y)-1, bullet->x, bullet->width, ST7735_WHITE);
 	}
 }
 
