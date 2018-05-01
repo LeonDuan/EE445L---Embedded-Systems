@@ -50,7 +50,6 @@ int main(void) {
 //	PortF_Init();								// heartbeat
 //	Proximity_Init();
 //	Init_Graphics();
-//	UART_Init();
 //	draw_Main_Ship(20, 20);
 //	draw_Enemy_Ship(1, 80, 50);
 //	draw_Enemy_Ship(2, 50, 80);
@@ -60,9 +59,8 @@ int main(void) {
 //	Switch_Init(&Switch_Test, &Switch_Test);
 //	Sound_Init();
 //	
+	Timer5A_Init(&dummy0, 800000);
 //	SysTick_Init();
-	// Timer0A_Init(&dummy0, 800000);
-	Timer0B_Init(&dummy1, 800000);
 	EnableInterrupts();
 //	Sound_Play(1);
 	while(1) {

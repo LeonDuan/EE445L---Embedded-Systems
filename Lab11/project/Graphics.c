@@ -520,7 +520,7 @@ void Draw_Explosion(Explosion * explosion){
 		case 3: to_draw = explosion3_bmp; break;
 	}
 	ST7735_DrawBitmap(explosion->x, explosion->y, to_draw, EXPLOSION_HEIGHT, EXPLOSION_WIDTH);	
-//}
+}
 
 //void Update_Screen() {
 //	// --------------------- draw enemies ---------------------
@@ -563,4 +563,4 @@ void Draw_Explosion(Explosion * explosion){
 //		Draw_Explosion(explosion);
 //		explosion->stage++;
 //	}
-}
+// }
