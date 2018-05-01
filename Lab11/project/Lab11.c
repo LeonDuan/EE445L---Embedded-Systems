@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include "../inc/tm4c123gh6pm.h"
 #include "PLL.h"
+#include "ST7735.h"
 #include "Timer.h"
 #include "Sound.h"
 #include "Game.h"
@@ -34,6 +35,14 @@ void Switch_Test(){
 	GPIO_PORTF_DATA_R = GPIO_PORTF_DATA_R^0x04; // toggle PF2
 }
 
+void dummy0(void) {
+	int a = 3;
+}
+
+void dummy1(void) {
+	int b = 3;
+}
+
 int main(void) {
 	PLL_Init(Bus80MHz);         // set system clock to 80 MHz
 	
@@ -49,17 +58,18 @@ int main(void) {
 //	draw_Boss(1, 80, 60);
 //	draw_Boss(2, 160, 60);
 //	Switch_Init(&Switch_Test, &Switch_Test);
-	Sound_Init();
+//	Sound_Init();
 //	
 //	SysTick_Init();
+	Timer0A_Init(&dummy0, 800000);
+	Timer0B_Init(&dummy1, 800000);
 	EnableInterrupts();
-	Sound_Play(1);
+//	Sound_Play(1);
 	while(1) {
 //		SysTick_Wait(8000000);
 //		requestEcho();
 //		uint32_t range = getCurrentHandPosition();
-//		UART_OutUDec(range);
-//		UART_OutChar(CR);
-//		UART_OutChar(LF);	
+//		ST7735_SetCursor(0,0);
+//		ST7735_OutUDec(range);
 	}
 }

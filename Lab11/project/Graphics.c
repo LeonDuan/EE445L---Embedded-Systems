@@ -8,8 +8,6 @@
 #define EXPLOSION_WIDTH		15
 #define EXPLOSION_HEIGHT	15
 
-int dead_enemies[NUM_MAX_ENEMIES];
-
 const unsigned short my_ship_bmp[] = {
  0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x8C51, 0x8C51, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
  0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x8C51, 0x8C51, 0x0000,
@@ -522,47 +520,47 @@ void Draw_Explosion(Explosion * explosion){
 		case 3: to_draw = explosion3_bmp; break;
 	}
 	ST7735_DrawBitmap(explosion->x, explosion->y, to_draw, EXPLOSION_HEIGHT, EXPLOSION_WIDTH);	
-}
+//}
 
-void Update_Screen() {
-	// --------------------- draw enemies ---------------------
-	for (int i = 0; i < NUM_MAX_ENEMIES; i++){
-		Ship * enemy = Get_Enemies()[0];
-		
-		// draw the enemy if its alive
-		if (enemy->hp > 0) {
-			Draw_Ship(enemy);
-		}
-		
-		// if the enemy just died
-		// TODO
-	}
-	
-	// --------------------- draw enemies' bullets ---------------------
-	for (int i = 0; i < NUM_ENEMY_BULLETS; i++){
-		Bullet * bullet = Get_Enemy_Bullets()[i];
-		Draw_Bullet(bullet);
-	}
-	
-	// --------------------- draw boss ---------------------
-	Draw_Ship(Get_Boss());
-	
-	
-	// --------------------- draw my ship ---------------------
-	Draw_Ship(Get_My_Ship());
-	
-	// --------------------- draw my bullets ---------------------
-	for (int i = 0; i < NUM_MY_BULLETS; i++){
-		Bullet * bullet = Get_My_Bullets()[i];
-		Draw_Bullet(bullet);
-	}
+//void Update_Screen() {
+//	// --------------------- draw enemies ---------------------
+//	for (int i = 0; i < NUM_MAX_ENEMIES; i++){
+//		Ship * enemy = Get_Enemies()[0];
+//		
+//		// draw the enemy if its alive
+//		if (enemy->hp > 0) {
+//			Draw_Ship(enemy);
+//		}
+//		
+//		// if the enemy just died
+//		// TODO
+//	}
+//	
+//	// --------------------- draw enemies' bullets ---------------------
+//	for (int i = 0; i < NUM_ENEMY_BULLETS; i++){
+//		Bullet * bullet = Get_Enemy_Bullets()[i];
+//		Draw_Bullet(bullet);
+//	}
+//	
+//	// --------------------- draw boss ---------------------
+//	Draw_Ship(Get_Boss());
+//	
+//	
+//	// --------------------- draw my ship ---------------------
+//	Draw_Ship(Get_My_Ship());
+//	
+//	// --------------------- draw my bullets ---------------------
+//	for (int i = 0; i < NUM_MY_BULLETS; i++){
+//		Bullet * bullet = Get_My_Bullets()[i];
+//		Draw_Bullet(bullet);
+//	}
 
-	// --------------------- draw explosions  ---------------------
-	for (int i = 0; i < NUM_MAX_ENEMIES; i++){
-		Explosion * explosion = Get_Explosions()[i];
-		if (explosion == NULL) continue;
-		if (explosion->stage > 3) continue;
-		Draw_Explosion(explosion);
-		explosion->stage++;
-	}
+//	// --------------------- draw explosions  ---------------------
+//	for (int i = 0; i < NUM_MAX_ENEMIES; i++){
+//		Explosion * explosion = Get_Explosions()[i];
+//		if (explosion == NULL) continue;
+//		if (explosion->stage > 3) continue;
+//		Draw_Explosion(explosion);
+//		explosion->stage++;
+//	}
 }
