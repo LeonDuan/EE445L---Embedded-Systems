@@ -79,39 +79,45 @@ void Update_Objects(void) {
 
 void simulate(void) {
 	Init_Level(1);
-	while(1){
-		if (Update_Enemies_Counter == 0) {
-			Update_Enemies();
-			Check_Hit();
-			Draw_Enemies();
-		}
-		if (Update_Boss_Counter == 0 && Get_Stage() == 2) {
-			Update_Boss();
-			Check_Hit();
-			Draw_Boss();
-		}
-		if (Update_My_Ship_Counter == 0) {
-			Update_My_Ship(getCurrentHandPosition());
-			Check_Hit();
-			Draw_My_Ship();
-		}
-		if (Add_My_Bullets_Counter == 0) {
-			Add_Bullets(0);
-			Check_Hit();
-			Draw_Bullets();
-		}
-		if (Add_Enemy_Bullets_Counter == 0 && Get_Stage() == 1) {
-			Add_Bullets(1);
-			Check_Hit();
-			Draw_Bullets();
-		}
-		if (Add_Boss_Bullets_Counter == 0 && Get_Stage() == 2) {
-			Add_Bullets(2);
-			Check_Hit();
-			Draw_Bullets();
-		}
-	}
+	Draw_My_Ship();
+	Draw_Enemies();
+//	while(1){
+//		if (Update_Enemies_Counter == 0) {
+//			Update_Enemies();
+//			Check_Hit();
+//			Draw_Enemies();
+//		}
+//		if (Update_Boss_Counter == 0 && Get_Stage() == 2) {
+//			Update_Boss();
+//			Check_Hit();
+//			Draw_Boss();
+//		}
+//		if (Update_My_Ship_Counter == 0) {
+//			Update_My_Ship(getCurrentHandPosition());
+//			Check_Hit();
+//			Draw_My_Ship();
+//		}
+//		if (Add_My_Bullets_Counter == 0) {
+//			Add_Bullets(0);
+//			Check_Hit();
+//			Draw_Bullets();
+//		}
+//		if (Add_Enemy_Bullets_Counter == 0 && Get_Stage() == 1) {
+//			Add_Bullets(1);
+//			Check_Hit();
+//			Draw_Bullets();
+//		}
+//		if (Add_Boss_Bullets_Counter == 0 && Get_Stage() == 2) {
+//			Add_Bullets(2);
+//			Check_Hit();
+//			Draw_Bullets();
+//		}
+//	}
 }
+
+int current_screen = 1; // 1 for home page that lets you choose to calibrate or game, 2 for gaming 
+int middle = 200;
+void dummy(void){}
 
 int main(void) {
 	PLL_Init(Bus80MHz);         // set system clock to 80 MHz
@@ -121,12 +127,29 @@ int main(void) {
 	Proximity_Init();
 	Init_Graphics();
 	SysTick_Init();
+	Switch_Init(&dummy, &dummy);
 	
-	Timer5A_Init(&Update_Objects, 4000000);
+//	Timer5A_Init(&Update_Objects, 4000000);
 	EnableInterrupts();
 //	Sound_Play(1);
-	while(1) {
+//	while(1) {
+////		if (current_screen == 1) {
+////			ST7735_OutString("Yellow to game\n");
+////			ST7735_OutString("Green to calibrate");
+////			if ((GPIO_PORTE_DATA_R & 0x02) != 0) current_screen = 2;
+////			else if ((GPIO_PORTE_DATA_R & 0x04) != 0) {
+////				middle = getCurrentHandPosition();
+////				ST7735_SetCursor(0,10);
+////				ST7735_OutString("Calibrated!");
+////				SysTick_Wait(100000000);
+////				ST7735_SetCursor(0,10);
+////				ST7735_OutString("           ");
+////			}
+////		}
+////		else {
+//////			simulate();
+////			// Draw_Dummy();
+////		}
 		simulate();
-		// Draw_Dummy();
-	}
 }
+
