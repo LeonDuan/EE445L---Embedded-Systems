@@ -27,16 +27,12 @@
 #define BOSS_HEIGHT				50
 #define BULLET_WIDTH			5
 #define BULLET_HEIGHT			2
-#define UP								1
-#define	LEFT							2
-#define DOWN							3
-#define RIGHT							4
 
 const Coordinate enemyGrid[20] = {
-	{125,30},{105,30},{85,30},{65,30},{45,30},
-	{125,50},{105,50},{85,50},{65,50},{45,50},
-	{125,70},{105,70},{85,70},{65,70},{45,70},
-	{125,90},{105,90},{85,90},{65,90},{45,90},
+	{145,30},{125,30},{105,30},{85,30},{65,30},
+	{145,50},{125,50},{105,50},{85,50},{65,50},
+	{145,70},{125,70},{105,70},{85,70},{65,70},
+	{145,90},{125,90},{105,90},{85,90},{65,90},
 };
 
 const Ship Enemy[3] = {
@@ -50,7 +46,7 @@ const Ship Boss[2] = {
 	{90,30,-100,-100,BOSS_WIDTH,BOSS_HEIGHT,20,BOSS2,1}
 };
 
-const Ship Player = {5,50,-100,-100,MAIN_SHIP_WIDTH,MAIN_SHIP_HEIGHT,10,MY_SHIP,1};
+const Ship Player = {20,50,-100,-100,MAIN_SHIP_WIDTH,MAIN_SHIP_HEIGHT,10,MY_SHIP,1};
 
 
 
@@ -97,22 +93,28 @@ Ship * get_RndShip(void) {
 	}
 }
 
-void Check_Hit() {
+int Check_Hit() {
+	int hit = 0;
 	switch (current_stage) {
 		case 1:
 			for (int i = 0; i < NUM_MY_BULLETS; i++) {
-				for (int j = 0; j < NUM_MAX_ENEMIES_COLUMN; j++) {
-					for (int k = 0; k < NUM_MAX_ENEMIES_ROW; k++) {
-						if (enemies[j][k].valid > 0) {
-							if(Is_Hit(&(enemies[j][k]),&(my_bullets[i]))) {
-								enemies[j][k].hp -= my_bullets[i].dmg;
-								if (enemies[j][k].hp <= 0) {
-									Add_Explosion(enemies[j][k].x,enemies[j][k].y);
-									enemies[j][k].valid = 0;
-									remaining_Enemies -= 1;
-									if (remaining_Enemies < 10) enemyMultiplier = 2;
-									if (remaining_Enemies < 5)	enemyMultiplier = 3;
-									
+				label:
+				if (my_bullets[i].valid == 1) {
+					for (int j = 0; j < NUM_MAX_ENEMIES_COLUMN; j++) {
+						for (int k = 0; k < NUM_MAX_ENEMIES_ROW; k++) {
+							if (enemies[j][k].valid > 0) {
+								if(Is_Hit(&(enemies[j][k]),&(my_bullets[i]))) {
+									my_bullets[i].valid = 0;
+									enemies[j][k].hp -= my_bullets[i].dmg;
+									if (enemies[j][k].hp <= 0) {
+										hit = 1;
+										Add_Explosion(enemies[j][k].x,enemies[j][k].y);
+										enemies[j][k].valid = 0;
+										remaining_Enemies -= 1;
+										if (remaining_Enemies < 10) enemyMultiplier = 2;
+										if (remaining_Enemies < 5)	enemyMultiplier = 3;
+									}
+									goto label;
 								}
 							}
 						}
@@ -136,6 +138,7 @@ void Check_Hit() {
 				}
 			}
 	}
+	return hit;
 }
 
 void Update_Enemies(void){
@@ -158,10 +161,10 @@ void Update_Enemies(void){
 			break;
 			
 		case (RIGHT):
-			for (int i = NUM_MAX_ENEMIES_ROW; i >= 0; i--) {
-				for (int j = 0; i < NUM_MAX_ENEMIES_COLUMN; j++) {
+			for (int i = NUM_MAX_ENEMIES_ROW-1; i >= 0; i--) {
+				for (int j = 0; j < NUM_MAX_ENEMIES_COLUMN; j++) {
 					if (enemies[j][i].valid > 0) {
-						if ((enemies[j][i].x - ENEMY_SHIP_WIDTH) <= 30) {
+						if ((enemies[j][i].x - ENEMY_SHIP_WIDTH) <= 40) {
 							enemy_direction = DOWN;
 							Update_Enemies();
 							return;
@@ -175,8 +178,8 @@ void Update_Enemies(void){
 			break;
 			
 		case (DOWN):
-			for (int i = NUM_MAX_ENEMIES_COLUMN; i >= 0; i--) {
-				for (int j = 0; i < NUM_MAX_ENEMIES_ROW; j++) {
+			for (int i = NUM_MAX_ENEMIES_COLUMN-1; i >= 0; i--) {
+				for (int j = 0; j < NUM_MAX_ENEMIES_ROW; j++) {
 					if (enemies[i][j].valid > 0) {
 						if ((enemies[i][j].y + ENEMY_SHIP_HEIGHT) >= 128) {
 							enemy_direction = LEFT;
@@ -193,9 +196,9 @@ void Update_Enemies(void){
 			
 		case (LEFT):
 			for (int i = 0; i < NUM_MAX_ENEMIES_ROW; i++) {
-				for (int j = 0; i < NUM_MAX_ENEMIES_COLUMN; j++) {
+				for (int j = 0; j < NUM_MAX_ENEMIES_COLUMN; j++) {
 					if (enemies[j][i].valid > 0) {
-						if (enemies[j][i].y >= 150) {
+						if (enemies[j][i].x >= 150) {
 							enemy_direction = UP;
 							Update_Enemies();
 							return;
@@ -226,7 +229,7 @@ void Update_Boss(void){
 			
 		case RIGHT:
 			if (boss.valid > 0) {
-				if ((boss.x - BOSS_WIDTH) <= 30) {
+				if ((boss.x - BOSS_WIDTH) <= 50) {
 					boss_direction = DOWN;
 					Update_Boss();
 					return;
@@ -346,7 +349,7 @@ void Add_Bullets(int ship){
 		case 0:
 			for (int i = 0; i < NUM_MY_BULLETS; i++) {
 				if (my_bullets[i].valid != 0 && my_bullets[i].valid != 1 && my_ship.valid > 0) {
-					my_bullets[i].x = my_ship.x + my_ship.width + 1;
+					my_bullets[i].x = my_ship.x + my_ship.width + 1 + BULLET_WIDTH;
 					my_bullets[i].xold = -100;
 					my_bullets[i].y = my_ship.y + (my_ship.height/2);
 					my_bullets[i].yold = -100;
@@ -354,6 +357,7 @@ void Add_Bullets(int ship){
 					my_bullets[i].dmg = 1;
 					my_bullets[i].height = BULLET_HEIGHT;
 					my_bullets[i].width = BULLET_WIDTH;
+					break;
 				}
 			}
 			break;
@@ -369,6 +373,7 @@ void Add_Bullets(int ship){
 					enemy_bullets[i].dmg = 1;
 					enemy_bullets[i].height = BULLET_HEIGHT;
 					enemy_bullets[i].width = BULLET_WIDTH;
+					break;
 				}
 			}
 			break;
@@ -383,6 +388,7 @@ void Add_Bullets(int ship){
 					enemy_bullets[i].dmg = 2;
 					enemy_bullets[i].height = BULLET_HEIGHT;
 					enemy_bullets[i].width = BULLET_WIDTH;
+					break;
 				}
 			}
 	}
@@ -402,4 +408,8 @@ int Is_GameWon(void) {
 
 int Get_Stage(void) {
 	return current_stage;
+}
+
+int Get_EnemyDirection(void) {
+	return enemy_direction;
 }

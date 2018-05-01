@@ -9,6 +9,10 @@
 #define 		NUM_ENEMY_BULLETS				100
 #define 		NUM_MY_BULLETS					100
 #define 		NUM_MAX_EXPLOSIONS			20
+#define 		UP								1
+#define			LEFT							2
+#define 		DOWN							3
+#define 		RIGHT							4
 
 // reserve 4-9 for adding more enemy types in the future
 
@@ -54,9 +58,10 @@ int Is_GameOver(void);
 int Is_LevelWon(void);	
 int Is_GameWon(void);
 int Get_Stage(void);
+int Get_EnemyDirection(void);
 
 // Update Objects
-void Check_Hit(void);
+int Check_Hit(void);
 void Update_Enemies(void);
 void Update_Boss(void);
 void Update_Enemy_Bullets(void);
