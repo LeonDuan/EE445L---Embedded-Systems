@@ -481,13 +481,17 @@ const unsigned short boss2_bmp[] = {
 
 };
 
+extern Ship enemies[NUM_MAX_ENEMIES_COLUMN][NUM_MAX_ENEMIES_ROW];
+extern Ship my_ship;
+extern Ship boss;
+extern Bullet enemy_bullets[NUM_ENEMY_BULLETS];
+extern Bullet my_bullets[NUM_MY_BULLETS];
+extern Explosion explosions[NUM_MAX_EXPLOSIONS];
+
 
 void Draw_Dummy(void){
 	ST7735_DrawBitmap(50, 50, my_ship_bmp, 20, 10);
 }
-
-
-
 
 void Init_Graphics(void){
 	ST7735_InitR(INITR_REDTAB);
@@ -526,13 +530,12 @@ void Draw_Explosion(Explosion * explosion){
 }
 
 void Draw_Enemies(void){
-	Ship ** enemies = Get_Enemies();
 	for (int i = 0; i < NUM_MAX_ENEMIES_COLUMN; i ++) {
 		for (int j = 0; j < NUM_MAX_ENEMIES_ROW; j ++) {
-			Ship * enemy = enemies[i * NUM_MAX_ENEMIES_COLUMN + j];
+			Ship * enemy = &enemies[i][j];
 			if (enemy->valid) {
 				ST7735_FillRect(enemy->yold, enemy->xold, enemy->height, enemy->width, ST7735_BLACK);
-				Draw_Ship(enemies[i * NUM_MAX_ENEMIES_COLUMN + j]);
+				Draw_Ship(enemy);
 			}
 			else if (enemy->valid == 0) {
 				ST7735_FillRect(enemy->y, enemy->x, enemy->height, enemy->width, ST7735_BLACK);
@@ -543,20 +546,17 @@ void Draw_Enemies(void){
 }
 
 void Draw_Boss(void) {
-	Ship * boss = Get_Boss();
-	if (boss->valid) {
-		Draw_Ship(boss);
+	if (boss.valid) {
+		Draw_Ship(&boss);
 	}
 }
 void Draw_My_Ship(void) {
-	Ship * my_ship = Get_My_Ship();
-	Draw_Ship(my_ship);
+	Draw_Ship(&my_ship);
 }
 
 void Draw_Bullets(void) {
-	Bullet ** my_bullets = Get_My_Bullets();
 	for (int i = 0; i < NUM_MY_BULLETS; i ++) {
-		Bullet * bullet = my_bullets[i];
+		Bullet * bullet = &my_bullets[i];
 		if (bullet->valid == 1){
 			ST7735_FillRect(bullet->yold, bullet->xold, bullet->height, bullet->width, ST7735_BLACK);
 			Draw_Bullet(bullet);
@@ -567,9 +567,8 @@ void Draw_Bullets(void) {
 		}
 	}
 	
-	Bullet ** enemy_bullets = Get_Enemy_Bullets();
 	for (int i = 0; i < NUM_ENEMY_BULLETS; i ++) {
-		Bullet * bullet = enemy_bullets[i];
+		Bullet * bullet = &enemy_bullets[i];
 		if (bullet->valid == 1){
 			ST7735_FillRect(bullet->yold, bullet->xold, bullet->height, bullet->width, ST7735_BLACK);
 			Draw_Bullet(bullet);
